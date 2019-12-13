@@ -31,66 +31,21 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.filegenerator.business;
+package fr.paris.lutece.plugins.filegenerator.service;
 
-import java.util.List;
+import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
+import fr.paris.lutece.portal.service.daemon.Daemon;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
-import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-
-/**
-*
-* ITemporaryFileDAO
-*
-*/
-public interface ITemporaryFileDAO
+public class TemporaryFileDaemon extends Daemon
 {
-
-    /**
-     * Insert a new record in the table.
-     *
-     * @param file
-     *            instance of the File object to insert
-     * @return the id of the new file
-     */
-    int insert( TemporaryFile file, Plugin plugin );
-
-    /**
-     * Load the data of the File from the table
-     *
-     * @param nId
-     *            The identifier of the file
-     * @return the instance of the File
-     */
-    TemporaryFile load( int nId, Plugin plugin );
-
-    /**
-     * Delete a record from the table
-     *
-     * @param nIdFile
-     *            The identifier of the file
-     */
-    void delete( int nIdFile, Plugin plugin );
-
-    /**
-     * Update the file in the table
-     *
-     * @param file
-     *            instance of the File object to update
-     */
-    void store( TemporaryFile file, Plugin plugin );
     
-    /**
-     * Load all the files of an user.
-     *
-     * @param user the user
-     * @return the list of File
-     */
-    List<TemporaryFile> findByUser( AdminUser user, Plugin plugin );
-    
-    /**
-     * Select files older than the given number of days 
-     * @param days
-     */
-    List<TemporaryFile> selectFilesOlderThan( int days, Plugin plugin );
+    @Override
+    public void run( )
+    {
+        int daysBeforeDelete = Integer.parseInt( AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" ) );
+        TemporaryFileHome.deleteFilesOlderThan( daysBeforeDelete );
+        
+    }
+
 }

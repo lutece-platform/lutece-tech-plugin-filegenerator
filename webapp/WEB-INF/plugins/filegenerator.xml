@@ -18,4 +18,13 @@
         <max-core-version/>
     </core-version-dependency>
     <db-pool-required>1</db-pool-required>
+
+    <daemons>
+        <daemon>
+            <daemon-id>temporaryfilesDaemon</daemon-id>
+            <daemon-name>filegenerator.daemon.temporaryfilesDaemon.name</daemon-name>
+            <daemon-description>filegenerator.daemon.temporaryfilesDaemon.description</daemon-description>
+            <daemon-class>fr.paris.lutece.plugins.filegenerator.service.TemporaryFileDaemon</daemon-class>
+        </daemon>
+    </daemons>
 </plug-in>
