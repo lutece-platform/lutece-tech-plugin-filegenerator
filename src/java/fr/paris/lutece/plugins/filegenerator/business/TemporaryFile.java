@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.filegenerator.business;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Optional;
 
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
@@ -185,7 +186,8 @@ public class TemporaryFile implements Serializable
     */
    public Timestamp getDateCreation( )
    {
-       return _dateCreation;
+       return Optional.ofNullable( _dateCreation ).map( Timestamp::toInstant )
+               .map( Timestamp::from ).orElse( null );
    }
 
    /**
@@ -196,7 +198,9 @@ public class TemporaryFile implements Serializable
     */
    public void setDateCreation( Timestamp dateCreation )
    {
-       _dateCreation = dateCreation;
+       
+       _dateCreation = Optional.ofNullable( dateCreation ).map( Timestamp::toInstant )
+               .map( Timestamp::from ).orElse( null );
    }
    
     /**

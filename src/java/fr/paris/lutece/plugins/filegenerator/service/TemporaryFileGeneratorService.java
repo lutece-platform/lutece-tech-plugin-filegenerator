@@ -149,7 +149,8 @@ public class TemporaryFileGeneratorService
             if ( _generator.isZippable( ) )
             {
                 Path zipFile = Paths.get( generatedFile.getParent( ).toString( ), _generator.getFileName( ) );
-                try {
+                try
+                {
                     FileUtil.zipFiles( zipFile, generatedFile );
                     physicalFile.setValue( Files.readAllBytes( zipFile ) );
                 }
