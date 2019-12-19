@@ -1,0 +1,2 @@
+INSERT INTO core_admin_right VALUES ('VIEW_TEMP_FILES','filegenerator.adminFeature.temporary_files.name',0,'jsp/admin/plugins/filegenerator/ManageMyFiles.jsp','filegenerator.adminFeature.temporary_files.description',0,NULL,'SYSTEM',NULL,NULL,3, 0);
+INSERT INTO core_user_right VALUES ('VIEW_TEMP_FILES', 1);
