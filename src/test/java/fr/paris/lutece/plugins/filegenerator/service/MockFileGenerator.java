@@ -44,16 +44,16 @@ public class MockFileGenerator implements IFileGenerator
 {
 
     private final String _content;
-    
-    public MockFileGenerator(String content )
+
+    public MockFileGenerator( String content )
     {
         _content = content;
     }
-    
+
     @Override
     public Path generateFile( ) throws IOException
     {
-        Path tempFolder = Paths.get( System.getProperty( "java.io.tmpdir" )  );
+        Path tempFolder = Paths.get( System.getProperty( "java.io.tmpdir" ) );
         Path f1 = Paths.get( tempFolder.toFile( ).getAbsolutePath( ), "test1.csv" );
         f1.toFile( ).createNewFile( );
         Files.write( f1, _content.getBytes( ) );

@@ -42,7 +42,7 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 public class FileGeneratorPlugin extends PluginDefaultImplementation implements Serializable
 {
     private static final long serialVersionUID = -5095833193168321464L;
-    
+
     /** The Constant PLUGIN_NAME. */
     public static final String PLUGIN_NAME = "filegenerator";
 

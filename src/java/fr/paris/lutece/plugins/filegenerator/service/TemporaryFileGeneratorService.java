@@ -52,9 +52,9 @@ import fr.paris.lutece.util.file.FileUtil;
 public class TemporaryFileGeneratorService
 {
     private static final TemporaryFileGeneratorService INSTANCE = new TemporaryFileGeneratorService( );
-    
+
     private static final Object LOCK = new Object( );
-    
+
     public static TemporaryFileGeneratorService getInstance( )
     {
         return INSTANCE;
@@ -87,14 +87,14 @@ public class TemporaryFileGeneratorService
         public void run( )
         {
             int idFile = initTemporaryFile( );
-            synchronized ( LOCK )
+            synchronized( LOCK )
             {
                 Path generatedFile = null;
                 try
                 {
                     generatedFile = _generator.generateFile( );
                 }
-                catch ( IOException e )
+                catch( IOException e )
                 {
                     AppLogService.error( "Error generating temporary file with id " + idFile, e );
                 }
@@ -125,7 +125,7 @@ public class TemporaryFileGeneratorService
                     file.setDescription( _generator.getDescription( ) );
                     file.setPhysicalFile( physicalFile );
                 }
-                catch ( IOException e )
+                catch( IOException e )
                 {
                     AppLogService.error( "Error storing temporary file with id " + idFile );
                     file.setSize( -1 );

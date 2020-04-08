@@ -44,79 +44,79 @@ public class TemporaryFileBusinessTest extends LuteceTestCase
 
     private AdminUser _user1;
     private AdminUser _user2;
-    
+
     @Override
     protected void setUp( ) throws Exception
     {
         super.setUp( );
         _user1 = new AdminUser( );
         _user1.setUserId( 1 );
-        
+
         _user2 = new AdminUser( );
         _user2.setUserId( 2 );
     }
-    
+
     public void testCRUD( )
     {
         TemporaryFile file = new TemporaryFile( );
         file.setUser( _user1 );
         TemporaryFileHome.create( file );
-        
+
         TemporaryFile loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
-        
+
         assertNotNull( loaded.getDateCreation( ) );
-        
+
         PhysicalFile physicalFile = new PhysicalFile( );
         physicalFile.setValue( "hello".getBytes( ) );
-        
+
         file.setTitle( "Title" );
         file.setPhysicalFile( physicalFile );
-        
+
         TemporaryFileHome.update( file );
-        
+
         loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
-        
+
         assertNotNull( loaded.getPhysicalFile( ) );
         assertEquals( "Title", loaded.getTitle( ) );
-        
+
         TemporaryFileHome.remove( file.getIdFile( ) );
-        
+
         loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
         assertNull( loaded );
     }
-    
+
     public void testFindByUser( )
     {
         TemporaryFile file1 = new TemporaryFile( );
         file1.setUser( _user1 );
         TemporaryFileHome.create( file1 );
-        
+
         TemporaryFile file2 = new TemporaryFile( );
         file2.setUser( _user2 );
         TemporaryFileHome.create( file2 );
-        
+
         List<TemporaryFile> files = TemporaryFileHome.findByUser( _user1 );
         assertEquals( 1, files.size( ) );
         assertEquals( _user1.getUserId( ), files.get( 0 ).getUser( ).getUserId( ) );
-        
+
         TemporaryFileHome.remove( file1.getIdFile( ) );
         TemporaryFileHome.remove( file2.getIdFile( ) );
     }
-    
+
     public void testDeleteFilesOlderThan( )
     {
         TemporaryFile file = new TemporaryFile( );
         file.setUser( _user1 );
         TemporaryFileHome.create( file );
-        
+
         TemporaryFile loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
-        
+
         assertNotNull( loaded );
-        
+
         TemporaryFileHome.deleteFilesOlderThan( -1 );
-        
+
         loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
-        
+
         assertNull( loaded );
     }
 }

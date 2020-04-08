@@ -39,10 +39,10 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 
 /**
-*
-* ITemporaryFileDAO
-*
-*/
+ *
+ * ITemporaryFileDAO
+ *
+ */
 public interface ITemporaryFileDAO
 {
 
@@ -79,17 +79,19 @@ public interface ITemporaryFileDAO
      *            instance of the File object to update
      */
     void store( TemporaryFile file, Plugin plugin );
-    
+
     /**
      * Load all the files of an user.
      *
-     * @param user the user
+     * @param user
+     *            the user
      * @return the list of File
      */
     List<TemporaryFile> findByUser( AdminUser user, Plugin plugin );
-    
+
     /**
-     * Select files older than the given number of days 
+     * Select files older than the given number of days
+     * 
      * @param days
      */
     List<TemporaryFile> selectFilesOlderThan( int days, Plugin plugin );

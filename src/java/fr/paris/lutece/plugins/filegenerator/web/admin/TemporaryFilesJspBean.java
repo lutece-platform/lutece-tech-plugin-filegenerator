@@ -62,23 +62,23 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 public class TemporaryFilesJspBean extends MVCAdminJspBean
 {
     private static final long serialVersionUID = 2823024035296798126L;
-    
+
     // Rights
     public static final String VIEW_TEMP_FILES = "VIEW_TEMP_FILES";
-    
+
     // Parameter
     public static final String PARAMETER_FILE_ID = "file_id";
-    
+
     // View
     private static final String VIEW_MY_FILES = "view_myFiles";
-    
+
     // Templates
     private static final String TEMPLATE_TEMPORARY_FILES = "admin/plugins/filegenerator/manage_temporary_files.html";
     private static final String PROPERTY_TITLE_MANAGE_FILES_SYSTEM = "filegenerator.manage_temporary_files.pageTitle";
-    
+
     // Marks
     private static final String MARK_FILES = "files_list";
-    
+
     @View( value = VIEW_MY_FILES, defaultView = true )
     public String getTemporaryFiles( HttpServletRequest request )
     {
@@ -86,29 +86,29 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         List<TemporaryFile> listFiles = TemporaryFileHome.findByUser( getUser( ) );
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
-        
+
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_TEMPORARY_FILES, getLocale( ), model );
-        
+
         return getAdminPage( template.getHtml( ) );
     }
- 
+
     public void doDownloadFile( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException, IOException
     {
         String strId = request.getParameter( PARAMETER_FILE_ID );
         if ( Strings.isNotEmpty( strId ) )
         {
             TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( strId ) );
-            
+
             if ( file.getUser( ).getUserId( ) != getUser( ).getUserId( ) )
             {
-               throw new AccessDeniedException( "Access Denied to this file" );
+                throw new AccessDeniedException( "Access Denied to this file" );
             }
             if ( file.getPhysicalFile( ) == null )
             {
                 throw new AccessDeniedException( "File not yet generated" );
             }
             PhysicalFile physicalFile = PhysicalFileHome.findByPrimaryKey( file.getPhysicalFile( ).getIdPhysicalFile( ) );
-            
+
             response.setContentType( file.getTitle( ) );
             response.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getTitle( ) + "\";" );
             OutputStream out = response.getOutputStream( );

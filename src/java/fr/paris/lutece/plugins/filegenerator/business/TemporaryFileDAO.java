@@ -60,18 +60,19 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     private static final String SQL_QUERY_DELETE = "DELETE FROM filegen_temporary_file WHERE id_file = ? ";
     private static final String SQL_QUERY_UPDATE = "UPDATE filegen_temporary_file SET id_file=?,id_user=?,title=?,description=?,id_physical_file=?,file_size=?,mime_type=? WHERE id_file = ?";
     private static final String SQL_QUERY_OLDER_THAN_DAYS = SQL_QUERY_SELECT_ALL + " WHERE date_creation < ? ";
-    
+
     /**
      * Insert a new record in the table.
      *
-     * @param file instance of the File object to insert
+     * @param file
+     *            instance of the File object to insert
      * @return the id of the new file
      */
 
     @Override
     public int insert( TemporaryFile file, Plugin plugin )
     {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
             int nIndex = 1;
             daoUtil.setInt( nIndex++, file.getUser( ).getUserId( ) );
@@ -105,14 +106,15 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     /**
      * Load the data of the File from the table
      *
-     * @param nId The identifier of the file
+     * @param nId
+     *            The identifier of the file
      * @return the instance of the File
      */
     @Override
     public TemporaryFile load( int nId, Plugin plugin )
     {
         TemporaryFile file = null;
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin ) )
         {
             daoUtil.setInt( 1, nId );
             daoUtil.executeQuery( );
@@ -130,11 +132,11 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     public List<TemporaryFile> findByUser( AdminUser user, Plugin plugin )
     {
         List<TemporaryFile> fileList = new ArrayList<>( );
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_USER, plugin ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_USER, plugin ) )
         {
             daoUtil.setInt( 1, user.getUserId( ) );
             daoUtil.executeQuery( );
-            
+
             while ( daoUtil.next( ) )
             {
                 fileList.add( dataToObject( daoUtil ) );
@@ -147,12 +149,13 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     /**
      * Delete a record from the table
      *
-     * @param nIdFile The identifier of the file
+     * @param nIdFile
+     *            The identifier of the file
      */
     @Override
     public void delete( int nIdFile, Plugin plugin )
     {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
             daoUtil.setInt( 1, nIdFile );
             daoUtil.executeUpdate( );
@@ -162,12 +165,13 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     /**
      * Update the file in the table
      *
-     * @param file instance of the File object to update
+     * @param file
+     *            instance of the File object to update
      */
     @Override
     public void store( TemporaryFile file, Plugin plugin )
     {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
             int nIndex = 1;
             daoUtil.setInt( nIndex++, file.getIdFile( ) );
@@ -218,16 +222,16 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
 
         return file;
     }
-    
+
     @Override
     public List<TemporaryFile> selectFilesOlderThan( int days, Plugin plugin )
     {
         List<TemporaryFile> fileList = new ArrayList<>( );
         LocalDateTime oldDate = LocalDateTime.now( ).minusDays( days );
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_OLDER_THAN_DAYS, plugin ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_OLDER_THAN_DAYS, plugin ) )
         {
             daoUtil.setTimestamp( 1, Timestamp.valueOf( oldDate ) );
-            
+
             daoUtil.executeQuery( );
             while ( daoUtil.next( ) )
             {

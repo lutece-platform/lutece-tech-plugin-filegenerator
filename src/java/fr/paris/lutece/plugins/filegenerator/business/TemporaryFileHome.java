@@ -49,6 +49,7 @@ public final class TemporaryFileHome
     // Static variable pointed at the DAO instance
     private static ITemporaryFileDAO _dao = SpringContextService.getBean( "temporaryFileDAO" );
     private static Plugin _plugin = FileGeneratorPlugin.getPlugin( );
+
     /**
      * Private constructor - this class need not be instantiated
      */
@@ -92,7 +93,7 @@ public final class TemporaryFileHome
             {
                 PhysicalFileHome.create( file.getPhysicalFile( ) );
             }
-            
+
         }
 
         _dao.store( file, _plugin );
@@ -130,7 +131,7 @@ public final class TemporaryFileHome
     {
         return _dao.load( nKey, _plugin );
     }
-    
+
     /**
      * Returns a list of files belonging to an user
      *
@@ -142,15 +143,16 @@ public final class TemporaryFileHome
     {
         return _dao.findByUser( user, _plugin );
     }
-    
+
     /**
      * Delete the temporary files older than the given number of days
+     * 
      * @param days
      */
     public static void deleteFilesOlderThan( int days )
     {
         List<TemporaryFile> files = _dao.selectFilesOlderThan( days, _plugin );
-        
+
         for ( TemporaryFile file : files )
         {
             if ( file.getPhysicalFile( ) != null )

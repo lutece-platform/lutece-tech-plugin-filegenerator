@@ -46,26 +46,26 @@ import fr.paris.lutece.util.file.FileUtil;
 public class TemporaryFileGeneratorServiceTest extends LuteceTestCase
 {
 
-    public void testGenerateFile() throws InterruptedException
+    public void testGenerateFile( ) throws InterruptedException
     {
         AdminUser user = new AdminUser( );
         user.setUserId( 1 );
-        
+
         TemporaryFileGeneratorService.getInstance( ).generateFile( new MockFileGenerator( "hello" ), user );
         Thread.sleep( 2000 );
-        
+
         List<TemporaryFile> files = TemporaryFileHome.findByUser( user );
         assertEquals( 1, files.size( ) );
-        
+
         TemporaryFile file = files.get( 0 );
         PhysicalFile physicalFile = PhysicalFileHome.findByPrimaryKey( file.getPhysicalFile( ).getIdPhysicalFile( ) );
-        
+
         assertEquals( "MockFile", file.getTitle( ) );
         assertEquals( "MockFileDesc", file.getDescription( ) );
         assertEquals( FileUtil.CONSTANT_MIME_TYPE_CSV, file.getMimeType( ) );
-        
+
         assertEquals( "hello", new String( physicalFile.getValue( ) ) );
-        
+
         TemporaryFileHome.remove( file.getIdFile( ) );
     }
 }

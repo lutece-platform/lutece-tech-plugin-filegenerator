@@ -39,13 +39,13 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 public class TemporaryFileDaemon extends Daemon
 {
-    
+
     @Override
     public void run( )
     {
         int daysBeforeDelete = Integer.parseInt( AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" ) );
         TemporaryFileHome.deleteFilesOlderThan( daysBeforeDelete );
-        
+
     }
 
 }

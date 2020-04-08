@@ -40,7 +40,6 @@ import java.util.Optional;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
 
-
 /**
  *
  * class TemporaryFile
@@ -49,7 +48,7 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 public class TemporaryFile implements Serializable
 {
     private static final long serialVersionUID = -5789366144218904989L;
-    
+
     private int _nIdFile;
     private PhysicalFile _physicalFile;
     private String _strTitle;
@@ -61,148 +60,146 @@ public class TemporaryFile implements Serializable
     private String _description;
 
     /**
-    *
-    * @return the id of the file
-    */
-   public int getIdFile( )
-   {
-       return _nIdFile;
-   }
+     *
+     * @return the id of the file
+     */
+    public int getIdFile( )
+    {
+        return _nIdFile;
+    }
 
-   /**
-    * set the id of the file
-    * 
-    * @param idFile
-    *            id of the file
-    */
-   public void setIdFile( int idFile )
-   {
-       _nIdFile = idFile;
-   }
+    /**
+     * set the id of the file
+     * 
+     * @param idFile
+     *            id of the file
+     */
+    public void setIdFile( int idFile )
+    {
+        _nIdFile = idFile;
+    }
 
-   /**
-    *
-    * @return the title of the file
-    */
-   public String getTitle( )
-   {
-       return _strTitle;
-   }
+    /**
+     *
+     * @return the title of the file
+     */
+    public String getTitle( )
+    {
+        return _strTitle;
+    }
 
-   /**
-    * set the title of the file
-    * 
-    * @param title
-    *            the title of the file
-    */
-   public void setTitle( String title )
-   {
-       _strTitle = title;
-   }
+    /**
+     * set the title of the file
+     * 
+     * @param title
+     *            the title of the file
+     */
+    public void setTitle( String title )
+    {
+        _strTitle = title;
+    }
 
-   /**
-    *
-    * @return the size of the file
-    */
-   public int getSize( )
-   {
-       return _nSize;
-   }
+    /**
+     *
+     * @return the size of the file
+     */
+    public int getSize( )
+    {
+        return _nSize;
+    }
 
-   /**
-    * set the size of the file
-    * 
-    * @param size
-    *            the size of the file
-    */
-   public void setSize( int size )
-   {
-       _nSize = size;
-   }
+    /**
+     * set the size of the file
+     * 
+     * @param size
+     *            the size of the file
+     */
+    public void setSize( int size )
+    {
+        _nSize = size;
+    }
 
-   /**
-    *
-    * @return the extension of the file
-    */
-   public String getExtension( )
-   {
-       return _strExtension;
-   }
+    /**
+     *
+     * @return the extension of the file
+     */
+    public String getExtension( )
+    {
+        return _strExtension;
+    }
 
-   /**
-    * set the extension of the file
-    * 
-    * @param extension
-    *            the title of the file
-    */
-   public void setExtension( String extension )
-   {
-       _strExtension = extension;
-   }
+    /**
+     * set the extension of the file
+     * 
+     * @param extension
+     *            the title of the file
+     */
+    public void setExtension( String extension )
+    {
+        _strExtension = extension;
+    }
 
-   /**
-    *
-    * @return the extension of the file
-    */
-   public String getMimeType( )
-   {
-       return _strMimeType;
-   }
+    /**
+     *
+     * @return the extension of the file
+     */
+    public String getMimeType( )
+    {
+        return _strMimeType;
+    }
 
-   /**
-    * set the mime type of the file
-    * 
-    * @param mimeType
-    *            the mime type of the file
-    */
-   public void setMimeType( String mimeType )
-   {
-       _strMimeType = mimeType;
-   }
+    /**
+     * set the mime type of the file
+     * 
+     * @param mimeType
+     *            the mime type of the file
+     */
+    public void setMimeType( String mimeType )
+    {
+        _strMimeType = mimeType;
+    }
 
-   /**
-    *
-    * @return the PhysicalFile associate to the file
-    */
-   public PhysicalFile getPhysicalFile( )
-   {
-       return _physicalFile;
-   }
+    /**
+     *
+     * @return the PhysicalFile associate to the file
+     */
+    public PhysicalFile getPhysicalFile( )
+    {
+        return _physicalFile;
+    }
 
-   /**
-    * set the PhysicalFile associate to the file
-    * 
-    * @param file
-    *            PhysicalFile
-    */
-   public void setPhysicalFile( PhysicalFile file )
-   {
-       _physicalFile = file;
-   }
+    /**
+     * set the PhysicalFile associate to the file
+     * 
+     * @param file
+     *            PhysicalFile
+     */
+    public void setPhysicalFile( PhysicalFile file )
+    {
+        _physicalFile = file;
+    }
 
-   /**
-    *
-    * @return the creation date of the file
-    */
-   public Timestamp getDateCreation( )
-   {
-       return Optional.ofNullable( _dateCreation ).map( Timestamp::toInstant )
-               .map( Timestamp::from ).orElse( null );
-   }
+    /**
+     *
+     * @return the creation date of the file
+     */
+    public Timestamp getDateCreation( )
+    {
+        return Optional.ofNullable( _dateCreation ).map( Timestamp::toInstant ).map( Timestamp::from ).orElse( null );
+    }
 
-   /**
-    * set the creation date of the file
-    * 
-    * @param dateCreation
-    *            the creation date of the file
-    */
-   public void setDateCreation( Timestamp dateCreation )
-   {
-       
-       _dateCreation = Optional.ofNullable( dateCreation ).map( Timestamp::toInstant )
-               .map( Timestamp::from ).orElse( null );
-   }
-   
+    /**
+     * set the creation date of the file
+     * 
+     * @param dateCreation
+     *            the creation date of the file
+     */
+    public void setDateCreation( Timestamp dateCreation )
+    {
+
+        _dateCreation = Optional.ofNullable( dateCreation ).map( Timestamp::toInstant ).map( Timestamp::from ).orElse( null );
+    }
+
     /**
      * @return the user
      */
@@ -212,7 +209,8 @@ public class TemporaryFile implements Serializable
     }
 
     /**
-     * @param user the user to set
+     * @param user
+     *            the user to set
      */
     public void setUser( AdminUser user )
     {
@@ -228,7 +226,8 @@ public class TemporaryFile implements Serializable
     }
 
     /**
-     * @param description the description to set
+     * @param description
+     *            the description to set
      */
     public void setDescription( String description )
     {

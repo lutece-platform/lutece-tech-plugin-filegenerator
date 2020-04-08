@@ -37,32 +37,32 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- *  File Generator for TemporaryFiles
+ * File Generator for TemporaryFiles
  */
 public interface IFileGenerator
 {
     /**
      * Generate the File.
+     * 
      * @return
      */
     Path generateFile( ) throws IOException;
-    
+
     /**
      * @return the File name.
      */
     String getFileName( );
-    
+
     /**
      * @return the file Type.
      */
     String getMimeType( );
-    
 
     /**
      * @return the file description.
      */
     String getDescription( );
-    
+
     /**
      * 
      * @return true if the file must be compressed before storage.
