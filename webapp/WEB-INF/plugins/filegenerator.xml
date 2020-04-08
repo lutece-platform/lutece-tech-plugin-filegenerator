@@ -3,7 +3,7 @@
     <!-- Plugin Informations -->
     <name>filegenerator</name>
     <class>fr.paris.lutece.plugins.filegenerator.service.FileGeneratorPlugin</class>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <documentation/>
     <installation/>
     <changes/>
@@ -11,7 +11,7 @@
     <description>filegenerator.plugin.description</description>
     <provider>filegenerator.plugin.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
-    <icon-url></icon-url>
+    <icon-url/>
     <copyright>Copyright 2001-2019 Mairie de Paris</copyright>
     <core-version-dependency>
         <min-core-version>4.0.0</min-core-version>
