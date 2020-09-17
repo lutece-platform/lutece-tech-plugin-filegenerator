@@ -33,10 +33,14 @@
  */
 package fr.paris.lutece.plugins.filegenerator.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
@@ -132,6 +136,13 @@ public class TemporaryFileGeneratorService
                 }
                 finally
                 {
+                    if ( generatedFile.toFile( ).isDirectory( ) )
+                    {
+                        for ( File fileToDelete : generatedFile.toFile( ).listFiles( ) )
+                        {
+                            FileUtil.deleteFile( fileToDelete );
+                        }
+                    }
                     FileUtil.deleteFile( generatedFile.toFile( ) );
                 }
             }
@@ -146,24 +157,43 @@ public class TemporaryFileGeneratorService
         private PhysicalFile createPhysicalFile( Path generatedFile ) throws IOException
         {
             PhysicalFile physicalFile = new PhysicalFile( );
-            if ( _generator.isZippable( ) )
+            if ( _generator.hasMultipleFiles( ) )
             {
-                Path zipFile = Paths.get( generatedFile.getParent( ).toString( ), _generator.getFileName( ) );
-                try
+                List<Path> files = new ArrayList<>( );
+                try ( DirectoryStream<Path> stream = Files.newDirectoryStream( generatedFile ) )
                 {
-                    FileUtil.zipFiles( zipFile, generatedFile );
-                    physicalFile.setValue( Files.readAllBytes( zipFile ) );
+                    for ( Path path : stream )
+                    {
+                        files.add( path );
+                    }
                 }
-                finally
-                {
-                    FileUtil.deleteFile( zipFile.toFile( ) );
-                }
+                createZipPhysicalFile( generatedFile, physicalFile, files.toArray( new Path [ files.size( )] ) );
             }
             else
-            {
-                physicalFile.setValue( Files.readAllBytes( generatedFile ) );
-            }
+                if ( _generator.isZippable( ) )
+                {
+                    createZipPhysicalFile( generatedFile, physicalFile, generatedFile );
+                }
+                else
+                {
+                    physicalFile.setValue( Files.readAllBytes( generatedFile ) );
+                }
             return physicalFile;
         }
+
+        private void createZipPhysicalFile( Path generatedFile, PhysicalFile physicalFile, Path... filesToZip ) throws IOException
+        {
+            Path zipFile = Paths.get( generatedFile.getParent( ).toString( ), _generator.getFileName( ) );
+            try
+            {
+                FileUtil.zipFiles( zipFile, filesToZip );
+                physicalFile.setValue( Files.readAllBytes( zipFile ) );
+            }
+            finally
+            {
+                FileUtil.deleteFile( zipFile.toFile( ) );
+            }
+        }
     }
+
 }
