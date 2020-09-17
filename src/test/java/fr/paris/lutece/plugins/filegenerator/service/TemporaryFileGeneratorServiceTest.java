@@ -33,7 +33,12 @@
  */
 package fr.paris.lutece.plugins.filegenerator.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
@@ -67,5 +72,45 @@ public class TemporaryFileGeneratorServiceTest extends LuteceTestCase
         assertEquals( "hello", new String( physicalFile.getValue( ) ) );
 
         TemporaryFileHome.remove( file.getIdFile( ) );
+    }
+
+    public void testGenerateMultipleFile( ) throws InterruptedException
+    {
+        AdminUser user = new AdminUser( );
+        user.setUserId( 1 );
+
+        TemporaryFileGeneratorService.getInstance( ).generateFile( new MockMultipleFileGenerator( "hello" ), user );
+        Thread.sleep( 2000 );
+
+        List<TemporaryFile> files = TemporaryFileHome.findByUser( user );
+        assertEquals( 1, files.size( ) );
+
+        TemporaryFile file = files.get( 0 );
+        PhysicalFile physicalFile = PhysicalFileHome.findByPrimaryKey( file.getPhysicalFile( ).getIdPhysicalFile( ) );
+
+        assertEquals( "MockFile", file.getTitle( ) );
+        assertEquals( "MockFileDesc", file.getDescription( ) );
+
+        try ( ZipInputStream zis = new ZipInputStream( new ByteArrayInputStream( physicalFile.getValue( ) ) ) )
+        {
+            List<String> fileInZip = new ArrayList<>( );
+            ZipEntry zipEntry = zis.getNextEntry( );
+            while ( zipEntry != null )
+            {
+                fileInZip.add( zipEntry.getName( ) );
+                zipEntry = zis.getNextEntry( );
+            }
+            assertEquals( 2, fileInZip.size( ) );
+            assertTrue( fileInZip.contains( "test1.csv" ) );
+            assertTrue( fileInZip.contains( "test2.csv" ) );
+        }
+        catch( IOException e )
+        {
+            fail( e.getMessage( ) );
+        }
+        finally
+        {
+            TemporaryFileHome.remove( file.getIdFile( ) );
+        }
     }
 }
