@@ -40,12 +40,12 @@ import java.nio.file.Paths;
 
 import fr.paris.lutece.util.file.FileUtil;
 
-public class MockFileGenerator implements IFileGenerator
+public class MockMultipleFileGenerator implements IFileGenerator
 {
 
     private final String _content;
 
-    public MockFileGenerator( String content )
+    public MockMultipleFileGenerator( String content )
     {
         _content = content;
     }
@@ -53,11 +53,15 @@ public class MockFileGenerator implements IFileGenerator
     @Override
     public Path generateFile( ) throws IOException
     {
-        Path tempFolder = Paths.get( System.getProperty( "java.io.tmpdir" ) );
+        Path tempFolder = Paths.get( System.getProperty( "java.io.tmpdir" ), "MockMultipleFileGenerator" );
+        tempFolder.toFile( ).mkdir( );
         Path f1 = Paths.get( tempFolder.toFile( ).getAbsolutePath( ), "test1.csv" );
         f1.toFile( ).createNewFile( );
         Files.write( f1, _content.getBytes( ) );
-        return f1;
+        Path f2 = Paths.get( tempFolder.toFile( ).getAbsolutePath( ), "test2.csv" );
+        f2.toFile( ).createNewFile( );
+        Files.write( f2, _content.getBytes( ) );
+        return tempFolder;
     }
 
     @Override
@@ -87,6 +91,6 @@ public class MockFileGenerator implements IFileGenerator
     @Override
     public boolean hasMultipleFiles( )
     {
-        return false;
+        return true;
     }
 }
