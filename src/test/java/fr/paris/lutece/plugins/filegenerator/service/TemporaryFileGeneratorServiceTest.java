@@ -37,8 +37,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import org.awaitility.Awaitility;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
@@ -57,7 +60,7 @@ public class TemporaryFileGeneratorServiceTest extends LuteceTestCase
         user.setUserId( 1 );
 
         TemporaryFileGeneratorService.getInstance( ).generateFile( new MockFileGenerator( "hello" ), user );
-        Thread.sleep( 2000 );
+        Awaitility.await( ).atMost( 5, TimeUnit.SECONDS ).until( ( ) -> TemporaryFileHome.findByUser( user ) != null );
 
         List<TemporaryFile> files = TemporaryFileHome.findByUser( user );
         assertEquals( 1, files.size( ) );
@@ -80,7 +83,7 @@ public class TemporaryFileGeneratorServiceTest extends LuteceTestCase
         user.setUserId( 1 );
 
         TemporaryFileGeneratorService.getInstance( ).generateFile( new MockMultipleFileGenerator( "hello" ), user );
-        Thread.sleep( 2000 );
+        Awaitility.await( ).atMost( 5, TimeUnit.SECONDS ).until( ( ) -> TemporaryFileHome.findByUser( user ) != null );
 
         List<TemporaryFile> files = TemporaryFileHome.findByUser( user );
         assertEquals( 1, files.size( ) );
