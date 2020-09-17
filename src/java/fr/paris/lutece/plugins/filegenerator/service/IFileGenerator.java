@@ -68,4 +68,12 @@ public interface IFileGenerator
      * @return true if the file must be compressed before storage.
      */
     boolean isZippable( );
+
+    /**
+     * @return true if the generator creates multiple files
+     */
+    default boolean hasMultipleFiles( )
+    {
+        return false;
+    }
 }
