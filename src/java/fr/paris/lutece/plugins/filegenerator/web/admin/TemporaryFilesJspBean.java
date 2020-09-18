@@ -49,7 +49,9 @@ import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFileHome;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
@@ -75,9 +77,11 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     // Templates
     private static final String TEMPLATE_TEMPORARY_FILES = "admin/plugins/filegenerator/manage_temporary_files.html";
     private static final String PROPERTY_TITLE_MANAGE_FILES_SYSTEM = "filegenerator.manage_temporary_files.pageTitle";
+    private static final String PROPERTY_MSG_DAYS_DELETE = "filegenerator.manage_temporary_files.help";
 
     // Marks
     private static final String MARK_FILES = "files_list";
+    private static final String MARK_DAYS_DELETE = "msg_days_before_delete";
 
     @View( value = VIEW_MY_FILES, defaultView = true )
     public String getTemporaryFiles( HttpServletRequest request )
@@ -86,6 +90,10 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         List<TemporaryFile> listFiles = TemporaryFileHome.findByUser( getUser( ) );
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
+        
+        String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
+        String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String[] {daysBeforeDelete}, getLocale( ) );
+        model.put( MARK_DAYS_DELETE, message );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_TEMPORARY_FILES, getLocale( ), model );
 
