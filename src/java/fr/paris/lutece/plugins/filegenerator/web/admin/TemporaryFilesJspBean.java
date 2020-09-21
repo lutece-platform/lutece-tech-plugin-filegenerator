@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2019, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,9 +90,11 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         List<TemporaryFile> listFiles = TemporaryFileHome.findByUser( getUser( ) );
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
-        
+
         String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
-        String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String[] {daysBeforeDelete}, getLocale( ) );
+        String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
+                daysBeforeDelete
+        }, getLocale( ) );
         model.put( MARK_DAYS_DELETE, message );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_TEMPORARY_FILES, getLocale( ), model );

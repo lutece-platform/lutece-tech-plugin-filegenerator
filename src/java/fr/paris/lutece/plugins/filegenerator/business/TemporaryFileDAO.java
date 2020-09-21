@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2019, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     @Override
     public int insert( TemporaryFile file, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
             int nIndex = 1;
             daoUtil.setInt( nIndex++, file.getUser( ).getUserId( ) );
@@ -114,7 +114,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     public TemporaryFile load( int nId, Plugin plugin )
     {
         TemporaryFile file = null;
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_PRIMARY_KEY, plugin ) )
         {
             daoUtil.setInt( 1, nId );
             daoUtil.executeQuery( );
@@ -132,7 +132,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     public List<TemporaryFile> findByUser( AdminUser user, Plugin plugin )
     {
         List<TemporaryFile> fileList = new ArrayList<>( );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_USER, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_BY_USER, plugin ) )
         {
             daoUtil.setInt( 1, user.getUserId( ) );
             daoUtil.executeQuery( );
@@ -155,7 +155,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     @Override
     public void delete( int nIdFile, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
             daoUtil.setInt( 1, nIdFile );
             daoUtil.executeUpdate( );
@@ -171,7 +171,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     @Override
     public void store( TemporaryFile file, Plugin plugin )
     {
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
             int nIndex = 1;
             daoUtil.setInt( nIndex++, file.getIdFile( ) );
@@ -228,7 +228,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
     {
         List<TemporaryFile> fileList = new ArrayList<>( );
         LocalDateTime oldDate = LocalDateTime.now( ).minusDays( days );
-        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_OLDER_THAN_DAYS, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_OLDER_THAN_DAYS, plugin ) )
         {
             daoUtil.setTimestamp( 1, Timestamp.valueOf( oldDate ) );
 
