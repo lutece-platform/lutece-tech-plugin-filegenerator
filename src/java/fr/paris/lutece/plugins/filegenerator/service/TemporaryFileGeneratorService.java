@@ -109,6 +109,7 @@ public class TemporaryFileGeneratorService
         private int initTemporaryFile( )
         {
             TemporaryFile file = new TemporaryFile( );
+            file.setTitle( "temp" );
             file.setUser( _user );
             file.setDescription( _generator.getDescription( ) );
             TemporaryFileHome.create( file );
