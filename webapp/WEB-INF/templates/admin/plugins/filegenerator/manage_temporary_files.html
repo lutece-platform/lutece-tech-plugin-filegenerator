@@ -16,35 +16,35 @@
 			<@boxBody>
 				<@alert color='info' title=msg_days_before_delete iconTitle='info' titleLevel='span' />
 				<@table>
-					<tr>
-						<th>#i18n{filegenerator.manage_temporary_files.labelType}</th>
-						<th>#i18n{filegenerator.manage_temporary_files.labelName}</th>
-						<th>#i18n{filegenerator.manage_temporary_files.labelState}</th>
-						<th>#i18n{filegenerator.manage_temporary_files.labelDate}</th>
-						<th></th>
-					</tr>
+					<@tr>
+						<@th>#i18n{filegenerator.manage_temporary_files.labelType}</@th>
+						<@th>#i18n{filegenerator.manage_temporary_files.labelName}</@th>
+						<@th>#i18n{filegenerator.manage_temporary_files.labelState}</@th>
+						<@th>#i18n{filegenerator.manage_temporary_files.labelDate}</@th>
+						<@th></@th>
+					</@tr>
 					<#list files_list as file >
-					<tr data-fileitem="${file.title}" class="file-item">
-						<td>${file.description}</td>
+					<@tr params='data-fileitem="${file.title}"' class='file-item'>
+						<@td>${file.description}</@td>
 						<#if file.size == 0>
-							<td></td>
-							<td>#i18n{filegenerator.manage_temporary_files.state.pending}</td>
+							<@td></@td>
+							<@td>#i18n{filegenerator.manage_temporary_files.state.pending}</@td>
 						<#elseif file.size == -1>
-							<td></td>
-							<td>#i18n{filegenerator.manage_temporary_files.state.error}</td>
+							<@td></@td>
+							<@td>#i18n{filegenerator.manage_temporary_files.state.error}</@td>
 						<#else>							
-							<td>${file.title}</td>
-							<td>#i18n{filegenerator.manage_temporary_files.state.done}</td>
+							<@td>${file.title}</@td>
+							<@td>#i18n{filegenerator.manage_temporary_files.state.done}</@td>
 						</#if>
-						<td>${file.dateCreation?datetime?string.medium_short}</td>
+						<@td>${file.dateCreation?datetime?string.medium_short}</@td>
 						<#if file.physicalFile??>
-							<td>
+							<@td>
 								<@aButton href='jsp/admin/plugins/filegenerator/DoDownloadTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='download' size='sm' color='info' />
-							</td>
+							</@td>
 						<#else>
-							<td></td>
+							<@td></@td>
 						</#if>
-					</tr>
+					</@tr>
 					</#list>
 				</@table>
 			</@boxBody>
