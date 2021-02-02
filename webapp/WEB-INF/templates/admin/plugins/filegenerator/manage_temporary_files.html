@@ -30,7 +30,7 @@
 							<@td></@td>
 							<@td>#i18n{filegenerator.manage_temporary_files.state.pending}</@td>
 						<#elseif file.size == -1>
-							<@td></@td>
+							<@td>${file.title}</@td>
 							<@td>#i18n{filegenerator.manage_temporary_files.state.error}</@td>
 						<#else>							
 							<@td>${file.title}</@td>
