@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -222,7 +222,8 @@ public class TemporaryFile implements Serializable
     }
 
     /**
-     * @param idPhysicalFile the idPhysicalFile to set
+     * @param idPhysicalFile
+     *            the idPhysicalFile to set
      */
     public void setIdPhysicalFile( String idPhysicalFile )
     {

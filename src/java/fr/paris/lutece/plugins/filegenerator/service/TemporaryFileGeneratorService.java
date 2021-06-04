@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2021, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -122,7 +122,7 @@ public class TemporaryFileGeneratorService
                     if ( FILE_MAX_SIZE > 0 && size > FILE_MAX_SIZE )
                     {
                         file.setTitle( I18nService.getLocalizedString( KEY_FILE_TOO_BIG, Locale.getDefault( ) ) );
-                        AppLogService.error( "File too big ( " + size + ") : Max size is " + FILE_MAX_SIZE ); 
+                        AppLogService.error( "File too big ( " + size + ") : Max size is " + FILE_MAX_SIZE );
                     }
                     else
                     {
