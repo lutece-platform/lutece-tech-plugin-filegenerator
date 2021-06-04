@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.filegenerator.business;
 import java.util.List;
 
 import fr.paris.lutece.plugins.filegenerator.service.FileGeneratorPlugin;
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFileHome;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
@@ -67,11 +66,6 @@ public final class TemporaryFileHome
      */
     public static int create( TemporaryFile file )
     {
-        if ( file.getPhysicalFile( ) != null )
-        {
-            file.getPhysicalFile( ).setIdPhysicalFile( PhysicalFileHome.create( file.getPhysicalFile( ) ) );
-        }
-
         return _dao.insert( file, _plugin );
     }
 
@@ -83,19 +77,6 @@ public final class TemporaryFileHome
      */
     public static void update( TemporaryFile file )
     {
-        if ( file.getPhysicalFile( ) != null )
-        {
-            if ( file.getPhysicalFile( ).getIdPhysicalFile( ) > 0 )
-            {
-                PhysicalFileHome.update( file.getPhysicalFile( ) );
-            }
-            else
-            {
-                PhysicalFileHome.create( file.getPhysicalFile( ) );
-            }
-
-        }
-
         _dao.store( file, _plugin );
     }
 
@@ -107,13 +88,6 @@ public final class TemporaryFileHome
      */
     public static void remove( int nIdFile )
     {
-        TemporaryFile file = TemporaryFileHome.findByPrimaryKey( nIdFile );
-
-        if ( file.getPhysicalFile( ) != null )
-        {
-            PhysicalFileHome.remove( file.getPhysicalFile( ).getIdPhysicalFile( ) );
-        }
-
         _dao.delete( nIdFile, _plugin );
     }
 
@@ -145,21 +119,12 @@ public final class TemporaryFileHome
     }
 
     /**
-     * Delete the temporary files older than the given number of days
+     * Select the temporary files older than the given number of days
      * 
      * @param days
      */
-    public static void deleteFilesOlderThan( int days )
+    public static  List<TemporaryFile> selectFilesOlderThan( int days )
     {
-        List<TemporaryFile> files = _dao.selectFilesOlderThan( days, _plugin );
-
-        for ( TemporaryFile file : files )
-        {
-            if ( file.getPhysicalFile( ) != null )
-            {
-                PhysicalFileHome.remove( file.getPhysicalFile( ).getIdPhysicalFile( ) );
-            }
-            _dao.delete( file.getIdFile( ), _plugin );
-        }
+        return _dao.selectFilesOlderThan( days, _plugin );
     }
 }

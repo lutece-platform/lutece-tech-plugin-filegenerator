@@ -46,8 +46,8 @@ import com.rometools.utils.Strings;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
+import fr.paris.lutece.plugins.filegenerator.service.TemporaryFileService;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFileHome;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
@@ -113,18 +113,20 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
             {
                 throw new AccessDeniedException( "Access Denied to this file" );
             }
-            if ( file.getPhysicalFile( ) == null )
+            if ( file.getIdPhysicalFile( ) == null )
             {
                 throw new AccessDeniedException( "File not yet generated" );
             }
-            PhysicalFile physicalFile = PhysicalFileHome.findByPrimaryKey( file.getPhysicalFile( ).getIdPhysicalFile( ) );
-
-            response.setContentType( file.getTitle( ) );
-            response.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getTitle( ) + "\";" );
-            OutputStream out = response.getOutputStream( );
-            out.write( physicalFile.getValue( ) );
-            out.flush( );
-            out.close( );
+            PhysicalFile physicalFile = TemporaryFileService.getInstance( ).loadPhysicalFile( file.getIdPhysicalFile( ) );
+            if ( physicalFile != null )
+            {
+                response.setContentType( file.getTitle( ) );
+                response.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getTitle( ) + "\";" );
+                OutputStream out = response.getOutputStream( );
+                out.write( physicalFile.getValue( ) );
+                out.flush( );
+                out.close( );
+            }
         }
     }
 }

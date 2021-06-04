@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.filegenerator.business;
 
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
@@ -78,15 +77,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
             daoUtil.setInt( nIndex++, file.getUser( ).getUserId( ) );
             daoUtil.setString( nIndex++, file.getTitle( ) );
             daoUtil.setString( nIndex++, file.getDescription( ) );
-
-            if ( file.getPhysicalFile( ) != null )
-            {
-                daoUtil.setInt( nIndex++, file.getPhysicalFile( ).getIdPhysicalFile( ) );
-            }
-            else
-            {
-                daoUtil.setIntNull( nIndex++ );
-            }
+            daoUtil.setString( nIndex++, file.getIdPhysicalFile( ) );
 
             daoUtil.setInt( nIndex++, file.getSize( ) );
             daoUtil.setString( nIndex++, file.getMimeType( ) );
@@ -178,16 +169,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
             daoUtil.setInt( nIndex++, file.getUser( ).getUserId( ) );
             daoUtil.setString( nIndex++, file.getTitle( ) );
             daoUtil.setString( nIndex++, file.getDescription( ) );
-
-            if ( file.getPhysicalFile( ) != null )
-            {
-                daoUtil.setInt( nIndex++, file.getPhysicalFile( ).getIdPhysicalFile( ) );
-            }
-            else
-            {
-                daoUtil.setIntNull( nIndex++ );
-            }
-
+            daoUtil.setString( nIndex++, file.getIdPhysicalFile( ) );
             daoUtil.setInt( nIndex++, file.getSize( ) );
             daoUtil.setString( nIndex++, file.getMimeType( ) );
             daoUtil.setInt( nIndex, file.getIdFile( ) );
@@ -207,14 +189,7 @@ public final class TemporaryFileDAO implements ITemporaryFileDAO
 
         file.setTitle( daoUtil.getString( nIndex++ ) );
         file.setDescription( daoUtil.getString( nIndex++ ) );
-
-        if ( daoUtil.getObject( nIndex ) != null )
-        {
-            PhysicalFile physicalFile = new PhysicalFile( );
-            physicalFile.setIdPhysicalFile( daoUtil.getInt( nIndex ) );
-            file.setPhysicalFile( physicalFile );
-        }
-        nIndex++;
+        file.setIdPhysicalFile( daoUtil.getString( nIndex++ ) );
 
         file.setSize( daoUtil.getInt( nIndex++ ) );
         file.setMimeType( daoUtil.getString( nIndex++ ) );

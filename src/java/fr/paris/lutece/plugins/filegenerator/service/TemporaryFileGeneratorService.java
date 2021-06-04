@@ -59,7 +59,7 @@ import fr.paris.lutece.util.file.FileUtil;
 public class TemporaryFileGeneratorService
 {
     private static final TemporaryFileGeneratorService INSTANCE = new TemporaryFileGeneratorService( );
-    private static final Integer FILE_MAX_SIZE = Integer.parseInt( AppPropertiesService.getProperty( "temporaryfiles.max.size", "30" ) );
+    private static final Integer FILE_MAX_SIZE = Integer.parseInt( AppPropertiesService.getProperty( "temporaryfiles.max.size", "0" ) );
     private static final String KEY_FILE_TOO_BIG = "filegenerator.temporaryfile.file.too.big";
     private static final Object LOCK = new Object( );
 
@@ -94,7 +94,7 @@ public class TemporaryFileGeneratorService
         @Override
         public void run( )
         {
-            int idFile = initTemporaryFile( );
+            int idFile = TemporaryFileService.getInstance( ).initTemporaryFile( _user, _generator.getDescription( ) );
             synchronized( LOCK )
             {
                 Path generatedFile = null;
@@ -110,16 +110,6 @@ public class TemporaryFileGeneratorService
             }
         }
 
-        private int initTemporaryFile( )
-        {
-            TemporaryFile file = new TemporaryFile( );
-            file.setTitle( "temp" );
-            file.setUser( _user );
-            file.setDescription( _generator.getDescription( ) );
-            TemporaryFileHome.create( file );
-            return file.getIdFile( );
-        }
-
         private void updateTemporaryFile( Path generatedFile, int idFile )
         {
             TemporaryFile file = TemporaryFileHome.findByPrimaryKey( idFile );
@@ -129,7 +119,7 @@ public class TemporaryFileGeneratorService
                 {
                     PhysicalFile physicalFile = createPhysicalFile( generatedFile );
                     int size = physicalFile.getValue( ).length;
-                    if ( size > FILE_MAX_SIZE )
+                    if ( FILE_MAX_SIZE > 0 && size > FILE_MAX_SIZE )
                     {
                         file.setTitle( I18nService.getLocalizedString( KEY_FILE_TOO_BIG, Locale.getDefault( ) ) );
                         AppLogService.error( "File too big ( " + size + ") : Max size is " + FILE_MAX_SIZE ); 
@@ -139,7 +129,8 @@ public class TemporaryFileGeneratorService
                         file.setTitle( _generator.getFileName( ) );
                         file.setMimeType( _generator.getMimeType( ) );
                         file.setDescription( _generator.getDescription( ) );
-                        file.setPhysicalFile( physicalFile );
+                        String physicaId = TemporaryFileService.getInstance( ).savePhysicalFile( file, physicalFile );
+                        file.setIdPhysicalFile( physicaId );
                     }
                     file.setSize( size );
                 }

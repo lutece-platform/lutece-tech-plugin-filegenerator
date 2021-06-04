@@ -33,6 +33,9 @@
  */
 package fr.paris.lutece.plugins.filegenerator.service;
 
+import java.util.List;
+
+import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
 import fr.paris.lutece.portal.service.daemon.Daemon;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -44,8 +47,11 @@ public class TemporaryFileDaemon extends Daemon
     public void run( )
     {
         int daysBeforeDelete = Integer.parseInt( AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" ) );
-        TemporaryFileHome.deleteFilesOlderThan( daysBeforeDelete );
-
+        List<TemporaryFile> list = TemporaryFileHome.selectFilesOlderThan( daysBeforeDelete );
+        for ( TemporaryFile temporaryFile : list )
+        {
+            TemporaryFileService.getInstance( ).removeTemporaryFile( temporaryFile );
+        }
     }
 
 }

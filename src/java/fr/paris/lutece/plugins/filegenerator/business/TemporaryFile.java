@@ -37,7 +37,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
 
 /**
@@ -50,7 +49,7 @@ public class TemporaryFile implements Serializable
     private static final long serialVersionUID = -5789366144218904989L;
 
     private int _nIdFile;
-    private PhysicalFile _physicalFile;
+    private String _idPhysicalFile;
     private String _strTitle;
     private int _nSize;
     private String _strExtension;
@@ -161,26 +160,6 @@ public class TemporaryFile implements Serializable
 
     /**
      *
-     * @return the PhysicalFile associate to the file
-     */
-    public PhysicalFile getPhysicalFile( )
-    {
-        return _physicalFile;
-    }
-
-    /**
-     * set the PhysicalFile associate to the file
-     * 
-     * @param file
-     *            PhysicalFile
-     */
-    public void setPhysicalFile( PhysicalFile file )
-    {
-        _physicalFile = file;
-    }
-
-    /**
-     *
      * @return the creation date of the file
      */
     public Timestamp getDateCreation( )
@@ -232,5 +211,21 @@ public class TemporaryFile implements Serializable
     public void setDescription( String description )
     {
         _description = description;
+    }
+
+    /**
+     * @return the idPhysicalFile
+     */
+    public String getIdPhysicalFile( )
+    {
+        return _idPhysicalFile;
+    }
+
+    /**
+     * @param idPhysicalFile the idPhysicalFile to set
+     */
+    public void setIdPhysicalFile( String idPhysicalFile )
+    {
+        _idPhysicalFile = idPhysicalFile;
     }
 }

@@ -37,7 +37,7 @@
 							<@td>#i18n{filegenerator.manage_temporary_files.state.done}</@td>
 						</#if>
 						<@td>${file.dateCreation?datetime?string.medium_short}</@td>
-						<#if file.physicalFile??>
+						<#if file.idPhysicalFile??>
 							<@td>
 								<@aButton href='jsp/admin/plugins/filegenerator/DoDownloadTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='download' size='sm' color='info' />
 							</@td>

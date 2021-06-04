@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.filegenerator.business;
 
 import java.util.List;
 
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.test.LuteceTestCase;
 
@@ -66,17 +65,14 @@ public class TemporaryFileBusinessTest extends LuteceTestCase
 
         assertNotNull( loaded.getDateCreation( ) );
 
-        PhysicalFile physicalFile = new PhysicalFile( );
-        physicalFile.setValue( "hello".getBytes( ) );
-
         file.setTitle( "Title" );
-        file.setPhysicalFile( physicalFile );
+        file.setIdPhysicalFile( "id" );
 
         TemporaryFileHome.update( file );
 
         loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
 
-        assertNotNull( loaded.getPhysicalFile( ) );
+        assertEquals( "id", loaded.getIdPhysicalFile( ) );
         assertEquals( "Title", loaded.getTitle( ) );
 
         TemporaryFileHome.remove( file.getIdFile( ) );
@@ -103,7 +99,7 @@ public class TemporaryFileBusinessTest extends LuteceTestCase
         TemporaryFileHome.remove( file2.getIdFile( ) );
     }
 
-    public void testDeleteFilesOlderThan( )
+    public void testSelectFilesOlderThan( )
     {
         TemporaryFile file = new TemporaryFile( );
         file.setUser( _user1 );
@@ -113,10 +109,9 @@ public class TemporaryFileBusinessTest extends LuteceTestCase
 
         assertNotNull( loaded );
 
-        TemporaryFileHome.deleteFilesOlderThan( -1 );
+        List<TemporaryFile> list = TemporaryFileHome.selectFilesOlderThan( -1 );
+        assertEquals( 1, list.size( ) );
 
-        loaded = TemporaryFileHome.findByPrimaryKey( file.getIdFile( ) );
-
-        assertNull( loaded );
+        TemporaryFileHome.remove( file.getIdFile( ) );
     }
 }
