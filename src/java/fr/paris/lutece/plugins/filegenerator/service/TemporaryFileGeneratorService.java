@@ -119,6 +119,7 @@ public class TemporaryFileGeneratorService
                 {
                     PhysicalFile physicalFile = createPhysicalFile( generatedFile );
                     int size = physicalFile.getValue( ).length;
+                    file.setSize( size );
                     if ( FILE_MAX_SIZE > 0 && size > FILE_MAX_SIZE )
                     {
                         file.setTitle( I18nService.getLocalizedString( KEY_FILE_TOO_BIG, Locale.getDefault( ) ) );
@@ -132,7 +133,6 @@ public class TemporaryFileGeneratorService
                         String physicaId = TemporaryFileService.getInstance( ).savePhysicalFile( file, physicalFile );
                         file.setIdPhysicalFile( physicaId );
                     }
-                    file.setSize( size );
                 }
                 catch( IOException e )
                 {

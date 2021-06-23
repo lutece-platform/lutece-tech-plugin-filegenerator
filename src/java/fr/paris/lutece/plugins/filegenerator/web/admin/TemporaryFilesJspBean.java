@@ -60,7 +60,7 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 /**
  * This class provides the user interface to list temporary files
  */
-@Controller( controllerJsp = "ManageMyFiles", controllerPath = "jsp/admin/plugins/filegenerator/", right = "VIEW_TEMP_FILES" )
+@Controller( controllerJsp = "ManageMyFiles.jsp", controllerPath = "jsp/admin/plugins/filegenerator/", right = "VIEW_TEMP_FILES" )
 public class TemporaryFilesJspBean extends MVCAdminJspBean
 {
     private static final long serialVersionUID = 2823024035296798126L;
@@ -128,5 +128,20 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
                 out.close( );
             }
         }
+    }
+    
+    public void doDeleteFile( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException, IOException
+    {
+        String strId = request.getParameter( PARAMETER_FILE_ID );
+        if ( Strings.isNotEmpty( strId ) )
+        {
+            TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( strId ) );
+            if ( file.getUser( ).getUserId( ) != getUser( ).getUserId( ) )
+            {
+                throw new AccessDeniedException( "Access Denied to this file" );
+            }
+            TemporaryFileService.getInstance( ).removeTemporaryFile( file );
+        }
+        redirectView( request, VIEW_MY_FILES );
     }
 }
