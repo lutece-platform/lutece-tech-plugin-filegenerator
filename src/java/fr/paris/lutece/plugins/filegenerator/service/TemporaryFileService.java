@@ -40,7 +40,6 @@ import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.file.FileService;
 import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
-import fr.paris.lutece.portal.service.file.implementation.LocalDatabaseFileService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 public class TemporaryFileService
@@ -51,8 +50,7 @@ public class TemporaryFileService
 
     private TemporaryFileService( )
     {
-        _fileStoreServiceProvider = FileService.getInstance( ).getFileStoreServiceProvider(
-                AppPropertiesService.getProperty( "temporaryfiles.file.provider.service", LocalDatabaseFileService.FILE_STORE_PROVIDER_NAME ) );
+        _fileStoreServiceProvider = FileService.getInstance( ).getFileStoreServiceProvider( AppPropertiesService.getProperty( "temporaryfiles.file.provider.service" ) );
     }
 
     public static final TemporaryFileService getInstance( )
