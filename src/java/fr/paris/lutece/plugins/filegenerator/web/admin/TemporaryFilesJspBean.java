@@ -82,6 +82,9 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     // Marks
     private static final String MARK_FILES = "files_list";
     private static final String MARK_DAYS_DELETE = "msg_days_before_delete";
+    
+    //Messages
+    private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
 
     @View( value = VIEW_MY_FILES, defaultView = true )
     public String getTemporaryFiles( HttpServletRequest request )
@@ -111,7 +114,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
 
             if ( file.getUser( ).getUserId( ) != getUser( ).getUserId( ) )
             {
-                throw new AccessDeniedException( "Access Denied to this file" );
+                throw new AccessDeniedException( MESSAGE_FILE_ACCESS_DENIED );
             }
             if ( file.getIdPhysicalFile( ) == null )
             {
@@ -138,7 +141,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
             TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( strId ) );
             if ( file.getUser( ).getUserId( ) != getUser( ).getUserId( ) )
             {
-                throw new AccessDeniedException( "Access Denied to this file" );
+                throw new AccessDeniedException( MESSAGE_FILE_ACCESS_DENIED );
             }
             TemporaryFileService.getInstance( ).removeTemporaryFile( file );
         }
