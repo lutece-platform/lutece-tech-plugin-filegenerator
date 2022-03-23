@@ -50,7 +50,8 @@ public class TemporaryFileService
 
     private TemporaryFileService( )
     {
-        _fileStoreServiceProvider = FileService.getInstance( ).getFileStoreServiceProvider( AppPropertiesService.getProperty( "temporaryfiles.file.provider.service" ) );
+        _fileStoreServiceProvider = FileService.getInstance( )
+                .getFileStoreServiceProvider( AppPropertiesService.getProperty( "temporaryfiles.file.provider.service" ) );
     }
 
     public static final TemporaryFileService getInstance( )

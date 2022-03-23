@@ -82,8 +82,8 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     // Marks
     private static final String MARK_FILES = "files_list";
     private static final String MARK_DAYS_DELETE = "msg_days_before_delete";
-    
-    //Messages
+
+    // Messages
     private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
 
     @View( value = VIEW_MY_FILES, defaultView = true )
@@ -132,7 +132,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
             }
         }
     }
-    
+
     public void doDeleteFile( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException, IOException
     {
         String strId = request.getParameter( PARAMETER_FILE_ID );
