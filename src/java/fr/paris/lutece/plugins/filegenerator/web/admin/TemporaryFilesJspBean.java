@@ -126,7 +126,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
                 response.setContentType( file.getTitle( ) );
                 response.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getTitle( ) + "\";" );
                 OutputStream out = response.getOutputStream( );
-                out.write( physicalFile.getValue( ) );
+                out.write( physicalFile.getValue() != null ? physicalFile.getValue() : new byte[0]);
                 out.flush( );
                 out.close( );
             }
