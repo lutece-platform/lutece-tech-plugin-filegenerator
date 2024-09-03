@@ -39,7 +39,9 @@ import fr.paris.lutece.portal.business.file.File;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.file.FileService;
+import fr.paris.lutece.portal.service.file.FileServiceException;
 import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 public class TemporaryFileService
@@ -77,25 +79,40 @@ public class TemporaryFileService
         file.setDateCreation( tempFile.getDateCreation( ) );
         file.setSize( tempFile.getSize( ) );
         file.setPhysicalFile( physicalFile );
-        return _fileStoreServiceProvider.storeFile( file );
+        
+        try {
+			return _fileStoreServiceProvider.storeFile( file );
+		} catch (FileServiceException e) {
+			AppLogService.error(e);
+			return null;
+		}
     }
 
     public PhysicalFile loadPhysicalFile( String idFile )
     {
-        File file = _fileStoreServiceProvider.getFile( idFile );
-        if ( file != null )
-        {
-            return file.getPhysicalFile( );
-        }
+        try {
+			File file = _fileStoreServiceProvider.getFile( idFile );
+			if ( file != null )
+			{
+			    return file.getPhysicalFile( );
+			}
+		} catch (FileServiceException e) {
+			AppLogService.error(e);
+		}
+        
         return null;
     }
 
-    public void removeTemporaryFile( TemporaryFile temporaryFile )
+    public void removeTemporaryFile( TemporaryFile temporaryFile ) 
     {
         if ( temporaryFile.getIdPhysicalFile( ) != null )
         {
-            _fileStoreServiceProvider.delete( temporaryFile.getIdPhysicalFile( ) );
+            try {
+				_fileStoreServiceProvider.delete( temporaryFile.getIdPhysicalFile( ) );
+		        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
+			} catch (FileServiceException e) {
+				AppLogService.error(e);
+			}
         }
-        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
     }
 }
