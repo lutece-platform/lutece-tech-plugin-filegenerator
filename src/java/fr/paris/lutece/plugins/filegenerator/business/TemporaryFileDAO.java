@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.filegenerator.business;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -47,6 +48,7 @@ import java.util.List;
 /**
  * This class provides Data Access methods for Field objects
  */
+@ApplicationScoped
 public final class TemporaryFileDAO implements ITemporaryFileDAO
 {
     // Constants

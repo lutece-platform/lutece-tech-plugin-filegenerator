@@ -1,6 +1,6 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
-<jsp:useBean id="jspBean" scope="session" class="fr.paris.lutece.plugins.filegenerator.web.admin.TemporaryFilesJspBean" />
-<%
-	jspBean.init( request, fr.paris.lutece.plugins.filegenerator.web.admin.TemporaryFilesJspBean.VIEW_TEMP_FILES); 
-	jspBean.doDeleteFile( request, response );
-%>
+
+<%@page import="fr.paris.lutece.plugins.filegenerator.web.admin.TemporaryFilesJspBean"%>
+
+${ temporaryFilesJspBean.init( pageContext.request, TemporaryFilesJspBean.VIEW_TEMP_FILES ) }
+${ temporaryFilesJspBean.doDeleteFile( pageContext.request ) }
