@@ -48,29 +48,53 @@ import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
+
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.file.FileUtil;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 /**
  * Service tha generates and saves Temporary Files.
  */
+@ApplicationScoped
 public class TemporaryFileGeneratorService
 {
-    private static final TemporaryFileGeneratorService INSTANCE = new TemporaryFileGeneratorService( );
     private static final Integer FILE_MAX_SIZE = Integer.parseInt( AppPropertiesService.getProperty( "temporaryfiles.max.size", "0" ) );
     private static final String KEY_FILE_TOO_BIG = "filegenerator.temporaryfile.file.too.big";
     private static final Object LOCK = new Object( );
 
+    @Inject
+    private TemporaryFileService _temporaryFileService;
+
+    TemporaryFileGeneratorService( )
+    {
+    }
+
+    /**
+     * Returns the unique instance of the {@link TemporaryFileGeneratorService} service.
+     * 
+     * <p>This method is deprecated and is provided for backward compatibility only. 
+     * For new code, use dependency injection with {@code @Inject} to obtain the 
+     * {@link TemporaryFileGeneratorService} instance instead.</p>
+     * 
+     * @return The unique instance of {@link TemporaryFileGeneratorService}.
+     * 
+     * @deprecated Use {@code @Inject} to obtain the {@link TemporaryFileGeneratorService} 
+     * instance. This method will be removed in future versions.
+     */
+    @Deprecated( since = "8.0", forRemoval = true )
     public static TemporaryFileGeneratorService getInstance( )
     {
-        return INSTANCE;
+    	return CDI.current( ).select( TemporaryFileGeneratorService.class ).get( );
     }
 
     public void generateFile( IFileGenerator generator, AdminUser user )
     {
-        CompletableFuture.runAsync( new GenerateFileRunnable( generator, user ) );
+        CompletableFuture.runAsync( new GenerateFileRunnable( generator, user, _temporaryFileService ) );
     }
 
     private static final class GenerateFileRunnable implements Runnable
@@ -78,6 +102,7 @@ public class TemporaryFileGeneratorService
 
         private IFileGenerator _generator;
         private AdminUser _user;
+        private TemporaryFileService _tempFileService;
 
         /**
          * Constructor.
@@ -85,16 +110,17 @@ public class TemporaryFileGeneratorService
          * @param _generator
          * @param _user
          */
-        public GenerateFileRunnable( IFileGenerator generator, AdminUser user )
+        public GenerateFileRunnable( IFileGenerator generator, AdminUser user, TemporaryFileService tempFileService )
         {
             _generator = generator;
             _user = user;
+            _tempFileService = tempFileService;
         }
 
         @Override
         public void run( )
         {
-            int idFile = TemporaryFileService.getInstance( ).initTemporaryFile( _user, _generator.getDescription( ) );
+            int idFile = _tempFileService.initTemporaryFile( _user, _generator.getDescription( ) );
             synchronized( LOCK )
             {
                 Path generatedFile = null;
@@ -130,7 +156,7 @@ public class TemporaryFileGeneratorService
                         file.setTitle( _generator.getFileName( ) );
                         file.setMimeType( _generator.getMimeType( ) );
                         file.setDescription( _generator.getDescription( ) );
-                        String physicaId = TemporaryFileService.getInstance( ).savePhysicalFile( file, physicalFile );
+                        String physicaId = _tempFileService.savePhysicalFile( file, physicalFile );
                         file.setIdPhysicalFile( physicaId );
                     }
                 }

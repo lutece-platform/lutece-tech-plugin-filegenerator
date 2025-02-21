@@ -38,7 +38,7 @@ import java.util.List;
 import fr.paris.lutece.plugins.filegenerator.service.FileGeneratorPlugin;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
  * This class provides instances management methods (create, find, ...) for file objects
@@ -46,7 +46,7 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 public final class TemporaryFileHome
 {
     // Static variable pointed at the DAO instance
-    private static ITemporaryFileDAO _dao = SpringContextService.getBean( "temporaryFileDAO" );
+    private static ITemporaryFileDAO _dao = CDI.current( ).select( ITemporaryFileDAO.class ).get( );
     private static Plugin _plugin = FileGeneratorPlugin.getPlugin( );
 
     /**

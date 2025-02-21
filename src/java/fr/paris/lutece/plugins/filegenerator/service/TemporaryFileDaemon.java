@@ -39,9 +39,11 @@ import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
 import fr.paris.lutece.portal.service.daemon.Daemon;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import jakarta.enterprise.inject.spi.CDI;
 
 public class TemporaryFileDaemon extends Daemon
 {
+	private TemporaryFileService _temporaryFileService = CDI.current( ).select( TemporaryFileService.class ).get( );
 
     @Override
     public void run( )
@@ -50,7 +52,7 @@ public class TemporaryFileDaemon extends Daemon
         List<TemporaryFile> list = TemporaryFileHome.selectFilesOlderThan( daysBeforeDelete );
         for ( TemporaryFile temporaryFile : list )
         {
-            TemporaryFileService.getInstance( ).removeTemporaryFile( temporaryFile );
+            _temporaryFileService.removeTemporaryFile( temporaryFile );
         }
     }
 

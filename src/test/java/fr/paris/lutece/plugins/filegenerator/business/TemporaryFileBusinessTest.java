@@ -35,6 +35,9 @@ package fr.paris.lutece.plugins.filegenerator.business;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.test.LuteceTestCase;
 
@@ -44,10 +47,9 @@ public class TemporaryFileBusinessTest extends LuteceTestCase
     private AdminUser _user1;
     private AdminUser _user2;
 
-    @Override
+    @BeforeEach
     protected void setUp( ) throws Exception
     {
-        super.setUp( );
         _user1 = new AdminUser( );
         _user1.setUserId( 1 );
 
@@ -55,6 +57,7 @@ public class TemporaryFileBusinessTest extends LuteceTestCase
         _user2.setUserId( 2 );
     }
 
+    @Test
     public void testCRUD( )
     {
         TemporaryFile file = new TemporaryFile( );

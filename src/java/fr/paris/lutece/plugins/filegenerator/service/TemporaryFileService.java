@@ -43,22 +43,26 @@ import fr.paris.lutece.portal.service.file.FileServiceException;
 import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class TemporaryFileService
 {
-    private static final TemporaryFileService INSTANCE = new TemporaryFileService( );
-
     private IFileStoreServiceProvider _fileStoreServiceProvider;
 
-    private TemporaryFileService( )
+    @Inject 
+    private FileService _fileService;
+
+    TemporaryFileService( )
     {
-        _fileStoreServiceProvider = FileService.getInstance( )
-                .getFileStoreServiceProvider( AppPropertiesService.getProperty( "temporaryfiles.file.provider.service" ) );
     }
 
-    public static final TemporaryFileService getInstance( )
+    @PostConstruct
+    void initFileService( )
     {
-        return INSTANCE;
+    	_fileStoreServiceProvider = _fileService.getFileStoreServiceProvider( AppPropertiesService.getProperty( "temporaryfiles.file.provider.service" ) );
     }
 
     public int initTemporaryFile( AdminUser user, String description )

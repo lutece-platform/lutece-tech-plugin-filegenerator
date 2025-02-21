@@ -39,10 +39,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 
-import com.rometools.utils.Strings;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
@@ -60,6 +63,8 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 /**
  * This class provides the user interface to list temporary files
  */
+@RequestScoped
+@Named
 @Controller( controllerJsp = "ManageMyFiles.jsp", controllerPath = "jsp/admin/plugins/filegenerator/", right = "VIEW_TEMP_FILES" )
 public class TemporaryFilesJspBean extends MVCAdminJspBean
 {
@@ -86,6 +91,9 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     // Messages
     private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
 
+    @Inject
+    private TemporaryFileService _temporaryFileService;
+
     @View( value = VIEW_MY_FILES, defaultView = true )
     public String getTemporaryFiles( HttpServletRequest request )
     {
@@ -108,7 +116,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     public void doDownloadFile( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException, IOException
     {
         String strId = request.getParameter( PARAMETER_FILE_ID );
-        if ( Strings.isNotEmpty( strId ) )
+        if ( StringUtils.isNotEmpty( strId ) )
         {
             TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( strId ) );
 
@@ -120,7 +128,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
             {
                 throw new AccessDeniedException( "File not yet generated" );
             }
-            PhysicalFile physicalFile = TemporaryFileService.getInstance( ).loadPhysicalFile( file.getIdPhysicalFile( ) );
+            PhysicalFile physicalFile = _temporaryFileService.loadPhysicalFile( file.getIdPhysicalFile( ) );
             if ( physicalFile != null )
             {
                 response.setContentType( file.getTitle( ) );
@@ -133,17 +141,17 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         }
     }
 
-    public void doDeleteFile( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException, IOException
+    public void doDeleteFile( HttpServletRequest request ) throws AccessDeniedException, IOException
     {
         String strId = request.getParameter( PARAMETER_FILE_ID );
-        if ( Strings.isNotEmpty( strId ) )
+        if ( StringUtils.isNotEmpty( strId ) )
         {
             TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( strId ) );
             if ( file.getUser( ).getUserId( ) != getUser( ).getUserId( ) )
             {
                 throw new AccessDeniedException( MESSAGE_FILE_ACCESS_DENIED );
             }
-            TemporaryFileService.getInstance( ).removeTemporaryFile( file );
+            _temporaryFileService.removeTemporaryFile( file );
         }
         redirectView( request, VIEW_MY_FILES );
     }
