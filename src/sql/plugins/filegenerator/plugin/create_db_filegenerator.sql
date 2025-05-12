@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset filegenerator:create_db_filegenerator.sql
+--preconditions onFail:MARK_RAN onError:WARN
 DROP TABLE IF EXISTS filegen_temporary_file;
 CREATE TABLE filegen_temporary_file (
 	id_file INT AUTO_INCREMENT,
