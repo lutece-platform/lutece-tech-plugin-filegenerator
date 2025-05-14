@@ -1,69 +1,57 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{filegenerator.manage_temporary_files.boxTitle}'>
-				<@tform method='post' type='inline' align='left'>
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='#i18n{filegenerator.manage_temporary_files.boxTitle}' class='align-items-center'>
+				<@tform type='inline' >
 					<@formGroup labelFor='plugin_type' labelKey='#i18n{portal.system.manage_plugins.buttonFilter}' hideLabel=['all'] formStyle='inline'>
 						<@inputGroup>
-							<@input type='text' name='search_files' id='search_files' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params='autocomplete="off"' size='sm' />
-							<@inputGroupItem>
-								<@button type='submit' title='#i18n{portal.system.manage_plugins.buttonFilter}' buttonIcon='filter' hideTitle=['all'] size='sm' />
-							</@inputGroupItem>
+							<@input type='text' name='search_files' id='search_files' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params='autocomplete="off" addons' />
+							<@button type='submit' title='#i18n{portal.system.manage_plugins.buttonFilter}' buttonIcon='filter' hideTitle=['all'] size='sm' />
 						</@inputGroup>
 					</@formGroup>
         		</@tform>
-			</@boxHeader>
-			<@boxBody>
-				<@alert color='info' title=msg_days_before_delete iconTitle='info' titleLevel='span' />
-				<@table>
-					<@tr>
-						<@th>#i18n{filegenerator.manage_temporary_files.labelType}</@th>
-						<@th>#i18n{filegenerator.manage_temporary_files.labelName}</@th>
-						<@th>#i18n{filegenerator.manage_temporary_files.labelState}</@th>
-						<@th>#i18n{filegenerator.manage_temporary_files.labelDate}</@th>
-						<@th></@th>
-					</@tr>
-					<#list files_list as file >
-					<@tr params='data-fileitem="${file.title}"' class='file-item'>
-						<@td>${file.description}</@td>
-						<#if file.size == 0>
-							<@td></@td>
-							<@td>#i18n{filegenerator.manage_temporary_files.state.pending}</@td>
-						<#elseif file.size == -1>
-							<@td>${file.title}</@td>
-							<@td>#i18n{filegenerator.manage_temporary_files.state.error}</@td>
-						<#else>							
-							<@td>${file.title}</@td>
-							<@td>#i18n{filegenerator.manage_temporary_files.state.done}</@td>
-						</#if>
-						<@td>${file.dateCreation?datetime?string.medium_short}</@td>
-						<#if file.idPhysicalFile??>
-							<@td>
-								<@aButton href='jsp/admin/plugins/filegenerator/DoDownloadTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='download' size='sm' color='info' />
-								<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash' size='sm' color='danger' />
-							</@td>
-						<#else>
-							<@td></@td>
-						</#if>
-					</@tr>
-					</#list>
-				</@table>
-			</@boxBody>
-		</@box>
-  </@columns>
-</@row>
-
-<script>
-/* Filter list */
-$("#search_files").on("keyup", function () {
-	var search = $(this).val();
-	$(".file-item").each(function (index) {
-		var pluginName = $(this).attr("data-fileitem");
-		if ( pluginName.match(search) == null ){
-			$(this).slideUp(200).fadeOut(500);
-		} else {
-			$(this).slideDown(200).fadeIn(500);
-		}
-	});
+			</@pageHeader>
+			<@alert color='info' title=msg_days_before_delete iconTitle='info' titleLevel='span' />
+			<@table>
+				<@tr>
+					<@th>#i18n{filegenerator.manage_temporary_files.labelType}</@th>
+					<@th>#i18n{filegenerator.manage_temporary_files.labelName}</@th>
+					<@th>#i18n{filegenerator.manage_temporary_files.labelState}</@th>
+					<@th>#i18n{filegenerator.manage_temporary_files.labelDate}</@th>
+					<@th></@th>
+				</@tr>
+				<#list files_list as file >
+				<@tr class='file-item'>
+					<@td class='searchable'>${file.description}</@td>
+					<#if file.size == 0>
+						<@td></@td>
+						<@td class='searchable'>#i18n{filegenerator.manage_temporary_files.state.pending}</@td>
+					<#elseif file.size == -1>
+						<@td class='searchable'>${file.title}</@td>
+						<@td class='searchable'>#i18n{filegenerator.manage_temporary_files.state.error}</@td>
+					<#else>							
+						<@td class='searchable'>${file.title}</@td>
+						<@td class='searchable'>#i18n{filegenerator.manage_temporary_files.state.done}</@td>
+					</#if>
+					<@td>${file.dateCreation?datetime?string.medium_short}</@td>
+					<#if file.idPhysicalFile??>
+						<@td>
+							<@aButton href='jsp/admin/plugins/filegenerator/DoDownloadTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='download' size='sm' color='info' />
+							<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash' size='sm' color='danger' />
+						</@td>
+					<#else>
+						<@td></@td>
+					</#if>
+				</@tr>
+				</#list>
+			</@table>
+		</@pageColumn>
+</@pageContainer>
+<script type="module">
+import LuteceSearchList from './themes/shared/modules/luteceSearchList.js';
+const searchInput = document.querySelector("#search_files");
+const searchElementList = document.querySelectorAll(".file-item");
+new LuteceSearchList( searchInput, searchElementList, {
+	searchableChild: [".searchable"],
+	highlight: true, 
 });
 </script>
