@@ -141,7 +141,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         }
     }
 
-    public void doDeleteFile( HttpServletRequest request ) throws AccessDeniedException, IOException
+    public String doDeleteFile( HttpServletRequest request ) throws AccessDeniedException, IOException
     {
         String strId = request.getParameter( PARAMETER_FILE_ID );
         if ( StringUtils.isNotEmpty( strId ) )
@@ -153,6 +153,6 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
             }
             _temporaryFileService.removeTemporaryFile( file );
         }
-        redirectView( request, VIEW_MY_FILES );
+        return getViewUrl( VIEW_MY_FILES );
     }
 }
