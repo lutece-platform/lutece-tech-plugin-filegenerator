@@ -42,7 +42,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
@@ -53,6 +52,7 @@ import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.file.FileUtil;
+import jakarta.enterprise.concurrent.Asynchronous;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
@@ -63,7 +63,7 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class TemporaryFileGeneratorService
 {
-    private static final Integer FILE_MAX_SIZE = Integer.parseInt( AppPropertiesService.getProperty( "temporaryfiles.max.size", "0" ) );
+    private static final Integer FILE_MAX_SIZE = Integer.parseInt( AppPropertiesService.getProperty( "filegenerator.temporaryfiles.max.size", "0" ) );
     private static final String KEY_FILE_TOO_BIG = "filegenerator.temporaryfile.file.too.big";
     private static final Object LOCK = new Object( );
 
@@ -86,15 +86,16 @@ public class TemporaryFileGeneratorService
      * @deprecated Use {@code @Inject} to obtain the {@link TemporaryFileGeneratorService} 
      * instance. This method will be removed in future versions.
      */
-    @Deprecated( since = "8.0", forRemoval = true )
+    @Deprecated( since = "3.0", forRemoval = true )
     public static TemporaryFileGeneratorService getInstance( )
     {
     	return CDI.current( ).select( TemporaryFileGeneratorService.class ).get( );
     }
 
+    @Asynchronous
     public void generateFile( IFileGenerator generator, AdminUser user )
     {
-        CompletableFuture.runAsync( new GenerateFileRunnable( generator, user, _temporaryFileService ) );
+        new GenerateFileRunnable( generator, user, _temporaryFileService ).run( );
     }
 
     private static final class GenerateFileRunnable implements Runnable
