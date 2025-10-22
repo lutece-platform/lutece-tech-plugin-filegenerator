@@ -31,65 +31,47 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.filegenerator.service;
+package fr.paris.lutece.plugins.filegenerator.service.download;
 
+import java.util.Map;
+
+import fr.paris.lutece.api.user.User;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
-import fr.paris.lutece.portal.business.file.File;
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.service.file.FileServiceException;
-import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
-import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.file.FileService;
+import fr.paris.lutece.portal.service.file.IFileRBACService;
+import fr.paris.lutece.portal.service.security.UserNotSignedException;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 @ApplicationScoped
-public class TemporaryFileService
+@Named( "filegenerator.temporaryfileRBACService" )
+public class TemporaryFileRBACService implements IFileRBACService
 {
 
-    @Inject
-    @Named( "filegenerator.fileStoreServiceProvider" )
-    private IFileStoreServiceProvider _fileStoreServiceProvider;
-
-    public int initTemporaryFile( AdminUser user, String description )
+    private static final long serialVersionUID = 2223704696251378416L;
+    private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
+    
+    @Override
+    public void checkAccessRights( Map<String, String> fileData, User user ) throws AccessDeniedException, UserNotSignedException
     {
-        TemporaryFile file = new TemporaryFile( );
-        file.setTitle( "temp" );
-        file.setUser( user );
-        file.setDescription( description );
-        TemporaryFileHome.create( file );
-        return file.getIdFile( );
-    }
+        String resourceId = fileData.get( FileService.PARAMETER_RESOURCE_ID );
 
-    public String savePhysicalFile( TemporaryFile tempFile, PhysicalFile physicalFile )
-    {
-        File file = new File( );
-        file.setTitle( tempFile.getTitle( ) );
-        file.setMimeType( tempFile.getMimeType( ) );
-        file.setDateCreation( tempFile.getDateCreation( ) );
-        file.setSize( tempFile.getSize( ) );
-        file.setPhysicalFile( physicalFile );
-        
-        try {
-			return _fileStoreServiceProvider.storeFile( file );
-		} catch (FileServiceException e) {
-			AppLogService.error(e);
-			return null;
-		}
-    }
-
-    public void removeTemporaryFile( TemporaryFile temporaryFile ) 
-    {
-        if ( temporaryFile.getIdPhysicalFile( ) != null )
+        if ( null != user )
         {
-            try {
-				_fileStoreServiceProvider.delete( temporaryFile.getIdPhysicalFile( ) );
-		        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
-			} catch (FileServiceException e) {
-				AppLogService.error(e);
-			}
+            AdminUser adminUser = (AdminUser) user;
+            TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( resourceId ) );
+            if ( file.getUser( ).getUserId( ) != adminUser.getUserId( ) )
+            {
+                throw new AccessDeniedException( MESSAGE_FILE_ACCESS_DENIED );
+            }
+        }
+        else
+        {
+            throw new AccessDeniedException( MESSAGE_FILE_ACCESS_DENIED );
         }
     }
+
 }

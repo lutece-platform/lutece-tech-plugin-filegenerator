@@ -35,7 +35,7 @@
 					<@td>${file.dateCreation?datetime?string.medium_short}</@td>
 					<#if file.idPhysicalFile??>
 						<@td>
-							<@aButton href='jsp/admin/plugins/filegenerator/DoDownloadTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='download' size='sm' color='info' />
+							<@aButton href='${download_links_map[""+file.idFile]}' buttonIcon='download' size='sm' color='info' />
 							<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash' size='sm' color='danger' />
 						</@td>
 					<#else>

@@ -3,4 +3,4 @@
 <%@page import="fr.paris.lutece.plugins.filegenerator.web.admin.TemporaryFilesJspBean"%>
 
 ${ temporaryFilesJspBean.init( pageContext.request, TemporaryFilesJspBean.VIEW_TEMP_FILES ) }
-${ temporaryFilesJspBean.doDeleteFile( pageContext.request ) }
+${ pageContext.response.sendRedirect( temporaryFilesJspBean.doDeleteFile( pageContext.request )) }
