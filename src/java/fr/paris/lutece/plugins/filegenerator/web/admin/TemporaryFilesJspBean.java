@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2022, City of Paris
+ * Copyright (c) 2002-2025, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.filegenerator.web.admin;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +44,13 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFile;
 import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
 import fr.paris.lutece.plugins.filegenerator.service.TemporaryFileService;
-import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.file.FileService;
+import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -87,6 +86,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     // Marks
     private static final String MARK_FILES = "files_list";
     private static final String MARK_DAYS_DELETE = "msg_days_before_delete";
+    private static final String MARK_DOWNLOAD_LINKS = "download_links_map";
 
     // Messages
     private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
@@ -94,6 +94,10 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
     @Inject
     private TemporaryFileService _temporaryFileService;
 
+    @Inject
+    @Named( "filegenerator.fileStoreServiceProvider" )
+    private IFileStoreServiceProvider _fileStoreServiceProvider;
+    
     @View( value = VIEW_MY_FILES, defaultView = true )
     public String getTemporaryFiles( HttpServletRequest request )
     {
@@ -108,37 +112,19 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         }, getLocale( ) );
         model.put( MARK_DAYS_DELETE, message );
 
+        Map<String, String> mapDownloadLinks = new HashMap<>( );
+        for ( TemporaryFile temporaryFile : listFiles )
+        {
+            Map<String, String> additionnalData = new HashMap<>( );
+            additionnalData.put( FileService.PARAMETER_RESOURCE_ID, String.valueOf( temporaryFile.getIdFile( ) ) );
+            mapDownloadLinks.put( String.valueOf( temporaryFile.getIdFile( ) ),
+                    _fileStoreServiceProvider.getFileDownloadUrlBO( temporaryFile.getIdPhysicalFile( ), additionnalData ) );
+        }
+        model.put( MARK_DOWNLOAD_LINKS, mapDownloadLinks );
+
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_TEMPORARY_FILES, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
-    }
-
-    public void doDownloadFile( HttpServletRequest request, HttpServletResponse response ) throws AccessDeniedException, IOException
-    {
-        String strId = request.getParameter( PARAMETER_FILE_ID );
-        if ( StringUtils.isNotEmpty( strId ) )
-        {
-            TemporaryFile file = TemporaryFileHome.findByPrimaryKey( Integer.valueOf( strId ) );
-
-            if ( file.getUser( ).getUserId( ) != getUser( ).getUserId( ) )
-            {
-                throw new AccessDeniedException( MESSAGE_FILE_ACCESS_DENIED );
-            }
-            if ( file.getIdPhysicalFile( ) == null )
-            {
-                throw new AccessDeniedException( "File not yet generated" );
-            }
-            PhysicalFile physicalFile = _temporaryFileService.loadPhysicalFile( file.getIdPhysicalFile( ) );
-            if ( physicalFile != null )
-            {
-                response.setContentType( file.getTitle( ) );
-                response.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getTitle( ) + "\";" );
-                OutputStream out = response.getOutputStream( );
-                out.write( physicalFile.getValue() != null ? physicalFile.getValue() : new byte[0]);
-                out.flush( );
-                out.close( );
-            }
-        }
     }
 
     public String doDeleteFile( HttpServletRequest request ) throws AccessDeniedException, IOException
