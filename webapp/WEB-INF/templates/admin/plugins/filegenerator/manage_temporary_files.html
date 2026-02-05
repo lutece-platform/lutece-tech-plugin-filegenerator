@@ -1,6 +1,7 @@
 <@pageContainer>
     <@pageColumn>
 		<@pageHeader title='#i18n{filegenerator.manage_temporary_files.boxTitle}' class='align-items-center'>
+				<#if files_list?size != 0><@alert color='info' iconTitle='info-circle' title=msg_days_before_delete titleLevel='span' /></#if>
 				<@tform type='inline' >
 					<@formGroup labelFor='plugin_type' labelKey='#i18n{portal.system.manage_plugins.buttonFilter}' hideLabel=['all'] formStyle='inline'>
 						<@inputGroup>
@@ -13,25 +14,31 @@
 			<#if files_list?size == 0>
 				<@empty class='mt-3' subtitle=' ' iconName='files-off'/>
 			<#else>	
-				<@alert color='info' class='mt-3' title=msg_days_before_delete iconTitle='info' titleLevel='span' />
 				<@manageFeature>
 					<#list files_list as file >
-					<@manageFeatureItem class='file-item'>
-						<@manageFeatureItemColumn class='searchable' auto=true>
-							#i18n{filegenerator.manage_temporary_files.labelType} : ${file.description}
+					<@manageFeatureItem liClass='file-item'>
+						<@manageFeatureItemColumn class='searchable' cols='12 col-md-3' >
+							#i18n{filegenerator.manage_temporary_files.labelType} : <em class="ms-1">${file.description}</em>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn class='searchable' cols='12 col-md-5'>
+							<#if file.size != 0>
+								<@span class='fw-bold text-truncate'>${file.title}</@span>
+							</#if>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn class='searchable'>
 							<#if file.size == 0>
 								<@tag color='warning'>#i18n{filegenerator.manage_temporary_files.labelState : #i18n{filegenerator.manage_temporary_files.state.pending}</@tag>
 							<#elseif file.size == -1>
-								<@span class='fw-bold'>${file.title}</@span>
 								<@tag color='danger'>#i18n{filegenerator.manage_temporary_files.labelState : #i18n{filegenerator.manage_temporary_files.state.error}</@tag>
 							<#else>							
-								<@span class='fw-bold'>${file.title}</@span>
 								<@tag color='success'>#i18n{filegenerator.manage_temporary_files.labelState : #i18n{filegenerator.manage_temporary_files.state.done}</@tag>
 							</#if>
+						</@manageFeatureItemColumn>
+						<@manageFeatureItemColumn class='searchable' align='end' cols='12 col-md-2'>
 							<@span>#i18n{filegenerator.manage_temporary_files.labelDate} : ${file.dateCreation?datetime?string.medium_short}</@span>
 						</@manageFeatureItemColumn>
 						<#if file.idPhysicalFile??>
-							<@manageFeatureItemColumn align>
+							<@manageFeatureItemColumn align='end'>
 								<@aButton href='${download_links_map[""+file.idFile]}' buttonIcon='download' size='sm' color='info' />
 								<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash' size='sm' color='danger' />
 							</@manageFeatureItemColumn>
