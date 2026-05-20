@@ -70,7 +70,11 @@ public class TemporaryFileGeneratorService
 
     public void generateFile( IFileGenerator generator, AdminUser user )
     {
-        CompletableFuture.runAsync( new GenerateFileRunnable( generator, user ) );
+        CompletableFuture.runAsync( new GenerateFileRunnable( generator, user ) )
+                .exceptionally( throwable -> {
+                    AppLogService.error( "Unhandled error during temporary file generation", throwable );
+                    return null;
+                } );
     }
 
     private static final class GenerateFileRunnable implements Runnable
