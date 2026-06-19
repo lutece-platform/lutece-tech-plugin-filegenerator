@@ -1,46 +1,46 @@
 <@pageContainer>
     <@pageColumn>
-		<@pageHeader title='#i18n{filegenerator.manage_temporary_files.boxTitle}' class='align-items-center'>
-				<#if files_list?size != 0><@alert color='info' iconTitle='info-circle' title=msg_days_before_delete titleLevel='span' /></#if>
-				<@tform type='inline' >
-					<@formGroup labelFor='plugin_type' labelKey='#i18n{portal.system.manage_plugins.buttonFilter}' hideLabel=['all'] formStyle='inline'>
-						<@inputGroup>
-							<@input type='text' name='search_files' id='search_files' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params='autocomplete="off" addons' />
-							<@button type='submit' title='#i18n{portal.system.manage_plugins.buttonFilter}' buttonIcon='filter' hideTitle=['all'] size='sm' />
-						</@inputGroup>
-					</@formGroup>
-        		</@tform>
-			</@pageHeader>
-			<#if files_list?size == 0>
-				<@empty class='mt-3' subtitle=' ' iconName='files-off'/>
-			<#else>	
-				<@manageFeature>
-					<#list files_list as file >
-					<@manageFeatureItem liClass='file-item'>
-						<@manageFeatureItemColumn class='searchable' auto=true align='end'>
-							<#if file.size == 0>
-								<@tag color='danger' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-alert' class='fs-2' />#i18n{filegenerator.manage_temporary_files.state.error}</@tag>
-							<#elseif file.size == -1>
-								<@tag color='warning' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-time' class='fs-2' />#i18n{filegenerator.manage_temporary_files.state.pending}</@tag>
-							<#else>							
-								<@tag color='success' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-check' class='fs-2' /> #i18n{filegenerator.manage_temporary_files.state.done}</@tag>
-							</#if>
-							<@span params='title="#i18n{filegenerator.manage_temporary_files.labelDate}"' class='fw-bold mx-3'>${file.dateCreation?datetime?string.medium_short}</@span>
-						</@manageFeatureItemColumn>
-						<@manageFeatureItemColumn class='searchable' flex=false auto=true>
-							<#if file.size != 0><@span class='fw-bold text-truncate' params='title="#i18n{filegenerator.manage_temporary_files.labelName} : ${file.title}"'>${file.title}</@span><br></#if>
-							<@span class='d-none d-md-block' params='title="${file.description}"'><em>${file.description}</em></@span>
-						</@manageFeatureItemColumn>
-						<#if file.idPhysicalFile??>
-							<@manageFeatureItemColumn align='end'>
-								<@aButton href='${download_links_map[""+file.idFile]}' buttonIcon='download'  color='info' />
-								<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash'  color='danger' />
-							</@manageFeatureItemColumn>
+		<@pageHeader title='#i18n{filegenerator.manage_temporary_files.boxTitle}' >
+			<#if files_list?size != 0><@alert color='info' class='py-2' iconTitle='info-circle' title=msg_days_before_delete titleLevel='span' /></#if>
+			<@tform type='inline' >
+				<@formGroup labelFor='plugin_type' labelKey='#i18n{portal.system.manage_plugins.buttonFilter}' hideLabel=['all'] formStyle='inline'>
+					<@inputGroup>
+						<@input type='text' name='search_files' id='search_files' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params='autocomplete="off" addons' />
+						<@button type='submit' title='#i18n{portal.system.manage_plugins.buttonFilter}' buttonIcon='filter' hideTitle=['all'] size='sm' />
+					</@inputGroup>
+				</@formGroup>
+			</@tform>
+		</@pageHeader>
+		<#if files_list?size == 0>
+			<@empty class='mt-3' subtitle=' ' iconName='files-off'/>
+		<#else>	
+			<@manageFeature>
+				<#list files_list as file >
+				<@manageFeatureItem liClass='file-item'>
+					<@manageFeatureItemColumn class='searchable' auto=true align='end'>
+						<#if file.size == 0>
+							<@tag color='danger' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-alert' class='fs-2' />#i18n{filegenerator.manage_temporary_files.state.error}</@tag>
+						<#elseif file.size == -1>
+							<@tag color='warning' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-time' class='fs-2' />#i18n{filegenerator.manage_temporary_files.state.pending}</@tag>
+						<#else>							
+							<@tag color='success' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-check' class='fs-2' /> #i18n{filegenerator.manage_temporary_files.state.done}</@tag>
 						</#if>
-					</@manageFeatureItem>
-					</#list>
-				</@manageFeature>
-			</#if>
+						<@span params='title="#i18n{filegenerator.manage_temporary_files.labelDate}"' class='fw-bold mx-3'>${file.dateCreation?datetime?string.medium_short}</@span>
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn class='searchable' flex=false auto=true>
+						<#if file.size != 0><@span class='fw-bold text-truncate' params='title="#i18n{filegenerator.manage_temporary_files.labelName} : ${file.title}"'>${file.title}</@span><br></#if>
+						<@span class='d-none d-md-block' params='title="${file.description}"'><em>${file.description}</em></@span>
+					</@manageFeatureItemColumn>
+					<#if file.idPhysicalFile??>
+						<@manageFeatureItemColumn align='end'>
+							<@aButton href='${download_links_map[""+file.idFile]}' buttonIcon='download'  color='info' />
+							<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash'  color='danger' />
+						</@manageFeatureItemColumn>
+					</#if>
+				</@manageFeatureItem>
+				</#list>
+			</@manageFeature>
+		</#if>
 	</@pageColumn>
 </@pageContainer>
 <script type="module">
@@ -50,5 +50,11 @@ const searchElementList = document.querySelectorAll(".file-item");
 new LuteceSearchList( searchInput, searchElementList, {
 	searchableChild: [".searchable"],
 	highlight: true, 
+	 // Keep the filter value across form submits / page reloads.
+    persist: true,
+    persistKey: "lutece-admin-filegenerator-search",
+    // Add a clear button next to the filter field.
+    clearButton: true,
+    clearButtonLabel: "#i18n{portal.util.labelReset}",
 });
 </script>
