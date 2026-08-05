@@ -50,6 +50,7 @@ public class TemporaryFileService
 
     private IFileStoreServiceProvider _fileStoreServiceProvider;
 
+
     private TemporaryFileService( )
     {
         _fileStoreServiceProvider = FileService.getInstance( )
@@ -109,10 +110,12 @@ public class TemporaryFileService
         {
             try {
 				_fileStoreServiceProvider.delete( temporaryFile.getIdPhysicalFile( ) );
-		        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
 			} catch (FileServiceException e) {
 				AppLogService.error(e);
 			}
         }
+
+        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
+
     }
 }
