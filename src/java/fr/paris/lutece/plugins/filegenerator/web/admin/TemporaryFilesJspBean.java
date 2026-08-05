@@ -106,11 +106,17 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
 
-        String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
-        String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
-                daysBeforeDelete
-        }, getLocale( ) );
-        model.put( MARK_DAYS_DELETE, message );
+        boolean isDeleteFileDeamonActivated = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.onstartup", "0" ).equals( "1" );
+
+        if( isDeleteFileDeamonActivated )
+        {
+            String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
+            String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
+                    daysBeforeDelete
+            }, getLocale( ) );
+            model.put( MARK_DAYS_DELETE, message );
+        }
+
 
         Map<String, String> mapDownloadLinks = new HashMap<>( );
         for ( TemporaryFile temporaryFile : listFiles )

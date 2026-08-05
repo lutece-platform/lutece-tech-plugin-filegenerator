@@ -41,6 +41,7 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.file.FileServiceException;
 import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -52,6 +53,8 @@ public class TemporaryFileService
     @Inject
     @Named( "filegenerator.fileStoreServiceProvider" )
     private IFileStoreServiceProvider _fileStoreServiceProvider;
+
+    private final int maxFileSize = Integer.parseInt( AppPropertiesService.getProperty( "daemon.temporaryfiles.max.size", "0" ) );
 
     public int initTemporaryFile( AdminUser user, String description )
     {
@@ -90,6 +93,9 @@ public class TemporaryFileService
 			} catch (FileServiceException e) {
 				AppLogService.error(e);
 			}
+        } else if( temporaryFile.getSize( ) > maxFileSize )
+        {
+            TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
         }
     }
 }
