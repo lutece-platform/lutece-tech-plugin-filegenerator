@@ -10,7 +10,9 @@
 					</@formGroup>
         		</@tform>
 			</@pageHeader>
-			<@alert color='info' title=msg_days_before_delete iconTitle='info' titleLevel='span' />
+			<#if msg_days_before_delete??>
+				<@alert color='info' title=msg_days_before_delete iconTitle='info' titleLevel='span' />
+			</#if>
 			<@table>
 				<@tr>
 					<@th>#i18n{filegenerator.manage_temporary_files.labelType}</@th>
@@ -33,14 +35,12 @@
 						<@td class='searchable'>#i18n{filegenerator.manage_temporary_files.state.done}</@td>
 					</#if>
 					<@td>${file.dateCreation?datetime?string.medium_short}</@td>
-					<#if file.idPhysicalFile??>
-						<@td>
+					<@td>
+						<#if file.idPhysicalFile??>
 							<@aButton href='jsp/admin/plugins/filegenerator/DoDownloadTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='download' size='sm' color='info' />
-							<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash' size='sm' color='danger' />
-						</@td>
-					<#else>
-						<@td></@td>
-					</#if>
+						</#if>
+						<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash' size='sm' color='danger' />
+					</@td>
 				</@tr>
 				</#list>
 			</@table>

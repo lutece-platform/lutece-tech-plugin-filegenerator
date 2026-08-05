@@ -49,6 +49,7 @@ import fr.paris.lutece.plugins.filegenerator.business.TemporaryFileHome;
 import fr.paris.lutece.plugins.filegenerator.service.TemporaryFileService;
 import fr.paris.lutece.portal.business.physicalfile.PhysicalFile;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.datastore.DatastoreService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
@@ -94,11 +95,22 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
 
-        String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
-        String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
-                daysBeforeDelete
-        }, getLocale( ) );
-        model.put( MARK_DAYS_DELETE, message );
+
+        boolean isDeleteFileDeamonActivated = Boolean.parseBoolean(
+                DatastoreService.getInstanceDataValue(  "core.daemon.temporaryfilesDaemon.onStartUp",
+                        DatastoreService.VALUE_FALSE ) );
+
+
+        if( isDeleteFileDeamonActivated )
+        {
+            String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
+            String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
+                    daysBeforeDelete
+            }, getLocale( ) );
+            model.put( MARK_DAYS_DELETE, message );
+        }
+
+
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_TEMPORARY_FILES, getLocale( ), model );
 
