@@ -41,6 +41,7 @@ import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.file.FileServiceException;
 import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -52,7 +53,7 @@ public class TemporaryFileService
     @Inject
     @Named( "filegenerator.fileStoreServiceProvider" )
     private IFileStoreServiceProvider _fileStoreServiceProvider;
-
+    
     public int initTemporaryFile( AdminUser user, String description )
     {
         TemporaryFile file = new TemporaryFile( );
@@ -86,10 +87,10 @@ public class TemporaryFileService
         {
             try {
 				_fileStoreServiceProvider.delete( temporaryFile.getIdPhysicalFile( ) );
-		        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
 			} catch (FileServiceException e) {
 				AppLogService.error(e);
 			}
         }
+        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
     }
 }

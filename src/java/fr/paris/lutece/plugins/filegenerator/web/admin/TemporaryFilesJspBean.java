@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.paris.lutece.portal.service.daemon.AppDaemonService;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -90,6 +91,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
 
     // Messages
     private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
+    public static final String TEMPORARYFILES_DAEMON_KEY = "temporaryfilesDaemon";
 
     @Inject
     private TemporaryFileService _temporaryFileService;
@@ -106,11 +108,17 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
 
-        String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
-        String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
-                daysBeforeDelete
-        }, getLocale( ) );
-        model.put( MARK_DAYS_DELETE, message );
+        boolean isDeleteFileDeamonActivated =  AppDaemonService.isDaemonRunning(TEMPORARYFILES_DAEMON_KEY);
+
+        if( isDeleteFileDeamonActivated )
+        {
+            String daysBeforeDelete = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.days.defore.delete", "30" );
+            String message = I18nService.getLocalizedString( PROPERTY_MSG_DAYS_DELETE, new String [ ] {
+                    daysBeforeDelete
+            }, getLocale( ) );
+            model.put( MARK_DAYS_DELETE, message );
+        }
+
 
         Map<String, String> mapDownloadLinks = new HashMap<>( );
         for ( TemporaryFile temporaryFile : listFiles )
