@@ -35,6 +35,10 @@ package fr.paris.lutece.plugins.filegenerator.web.admin;
 
 import java.util.Locale;
 
+import fr.paris.lutece.portal.service.daemon.AppDaemonService;
+import fr.paris.lutece.portal.service.daemon.DaemonEntry;
+import fr.paris.lutece.portal.service.datastore.DatastoreService;
+import fr.paris.lutece.portal.service.init.LuteceInitException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,9 +109,8 @@ public class TemporaryFilesJspBeanTest extends LuteceTestCase
      * "days before delete" info message.
      */
     @Test
-    public void testGetTemporaryFiles_daemonActivated_pageContainsDaysBeforeDeleteMessage( )
-    {
-        System.setProperty( KEY_ONSTARTUP, "1" );
+    public void testGetTemporaryFiles_daemonActivated_pageContainsDaysBeforeDeleteMessage( ) throws LuteceInitException {
+        AppDaemonService.startDaemon("temporaryfilesDaemon");
         System.setProperty( KEY_DAYS_BEFORE_DELETE, "42" );
 
         fr.paris.lutece.portal.business.user.AdminUser user = new fr.paris.lutece.portal.business.user.AdminUser( );

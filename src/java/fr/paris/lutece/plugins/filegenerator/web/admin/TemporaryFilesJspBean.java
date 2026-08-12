@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.paris.lutece.portal.service.daemon.AppDaemonService;
 import org.apache.commons.lang3.StringUtils;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -90,6 +91,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
 
     // Messages
     private static final String MESSAGE_FILE_ACCESS_DENIED = "Access Denied to this file";
+    public static final String TEMPORARYFILES_DAEMON_KEY = "temporaryfilesDaemon";
 
     @Inject
     private TemporaryFileService _temporaryFileService;
@@ -106,7 +108,7 @@ public class TemporaryFilesJspBean extends MVCAdminJspBean
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_FILES, listFiles );
 
-        boolean isDeleteFileDeamonActivated = AppPropertiesService.getProperty( "daemon.temporaryfilesDaemon.onstartup", "0" ).equals( "1" );
+        boolean isDeleteFileDeamonActivated =  AppDaemonService.isDaemonRunning(TEMPORARYFILES_DAEMON_KEY);
 
         if( isDeleteFileDeamonActivated )
         {

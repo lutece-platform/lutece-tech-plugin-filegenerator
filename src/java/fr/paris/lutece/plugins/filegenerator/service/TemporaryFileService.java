@@ -53,9 +53,7 @@ public class TemporaryFileService
     @Inject
     @Named( "filegenerator.fileStoreServiceProvider" )
     private IFileStoreServiceProvider _fileStoreServiceProvider;
-
-    private final int maxFileSize = Integer.parseInt( AppPropertiesService.getProperty( "daemon.temporaryfiles.max.size", "0" ) );
-
+    
     public int initTemporaryFile( AdminUser user, String description )
     {
         TemporaryFile file = new TemporaryFile( );
@@ -89,13 +87,10 @@ public class TemporaryFileService
         {
             try {
 				_fileStoreServiceProvider.delete( temporaryFile.getIdPhysicalFile( ) );
-		        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
 			} catch (FileServiceException e) {
 				AppLogService.error(e);
 			}
-        } else if( temporaryFile.getSize( ) > maxFileSize )
-        {
-            TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
         }
+        TemporaryFileHome.remove( temporaryFile.getIdFile( ) );
     }
 }

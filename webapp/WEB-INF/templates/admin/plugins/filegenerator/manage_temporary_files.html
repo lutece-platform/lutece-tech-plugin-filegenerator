@@ -31,12 +31,12 @@
 						<#if file.size != 0><@span class='fw-bold text-truncate' params='title="#i18n{filegenerator.manage_temporary_files.labelName} : ${file.title}"'>${file.title}</@span><br></#if>
 						<@span class='d-none d-md-block' params='title="${file.description}"'><em>${file.description}</em></@span>
 					</@manageFeatureItemColumn>
-					<#if file.idPhysicalFile??>
 						<@manageFeatureItemColumn align='end'>
-							<@aButton href='${download_links_map[""+file.idFile]}' buttonIcon='download'  color='info' />
+							<#if file.idPhysicalFile??>
+								<@aButton href='${download_links_map[""+file.idFile]}' buttonIcon='download'  color='info' />
+							</#if>
 							<@aButton href='jsp/admin/plugins/filegenerator/DoDeleteTemporaryFile.jsp?file_id=${file.idFile}' buttonIcon='trash'  color='danger' />
 						</@manageFeatureItemColumn>
-					</#if>
 				</@manageFeatureItem>
 				</#list>
 			</@manageFeature>
