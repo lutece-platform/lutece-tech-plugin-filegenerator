@@ -5,7 +5,7 @@
 			<@tform type='inline' >
 				<@formGroup labelFor='plugin_type' labelKey='#i18n{portal.system.manage_plugins.buttonFilter}' hideLabel=['all'] formStyle='inline'>
 					<@inputGroup>
-						<@input type='text' name='search_files' id='search_files' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params='autocomplete="off" addons' />
+						<@input type='text' name='search_files' id='search_files' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params={"autocomplete": "off"} />
 						<@button type='submit' title='#i18n{portal.system.manage_plugins.buttonFilter}' buttonIcon='filter' hideTitle=['all'] size='sm' />
 					</@inputGroup>
 				</@formGroup>
@@ -25,11 +25,11 @@
 						<#else>							
 							<@tag color='success' class='p-2' title='#i18n{filegenerator.manage_temporary_files.labelState}'><@icon style='file-check' class='fs-2' /> #i18n{filegenerator.manage_temporary_files.state.done}</@tag>
 						</#if>
-						<@span params='title="#i18n{filegenerator.manage_temporary_files.labelDate}"' class='fw-bold mx-3'>${file.dateCreation?datetime?string.medium_short}</@span>
+						<@span params={"title": "#i18n{filegenerator.manage_temporary_files.labelDate}"} class='fw-bold mx-3'>${file.dateCreation?datetime?string.medium_short}</@span>
 					</@manageFeatureItemColumn>
 					<@manageFeatureItemColumn class='searchable' flex=false auto=true>
-						<#if file.size != 0><@span class='fw-bold text-truncate' params='title="#i18n{filegenerator.manage_temporary_files.labelName} : ${file.title}"'>${file.title}</@span><br></#if>
-						<@span class='d-none d-md-block' params='title="${file.description}"'><em>${file.description}</em></@span>
+						<#if file.size != 0><@span class='fw-bold text-truncate' params={"title": "#i18n{filegenerator.manage_temporary_files.labelName} : ${file.title}"}>${file.title}</@span><br></#if>
+						<@span class='d-none d-md-block' params={"title": file.description}><em>${file.description}</em></@span>
 					</@manageFeatureItemColumn>
 						<@manageFeatureItemColumn align='end'>
 							<#if file.idPhysicalFile??>
